@@ -1,0 +1,172 @@
+/* ══════════════════════════════════════
+   NAVBAR — Floresia
+══════════════════════════════════════ */
+
+.navbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+/* ── Logo ── */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo-img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+}
+
+.logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--pink);
+  letter-spacing: -0.3px;
+}
+
+/* ── Navigation Links ── */
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 32px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-mid);
+  transition: color 0.2s;
+  letter-spacing: 0.02em;
+}
+
+.nav-links a:hover {
+  color: var(--pink);
+}
+
+/* ── Icônes compte + panier ── */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--pink-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pink);
+  transition: all 0.2s;
+  position: relative;
+}
+
+.nav-icon:hover {
+  background: var(--pink-mid);
+  transform: scale(1.05);
+}
+
+/* ── Icône panier personnalisée ── */
+.cart-icon-img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  /* Filtre CSS exact pour #C0478A (rose Floresia) */
+  filter: brightness(0) saturate(100%) invert(25%) sepia(78%) saturate(1789%) hue-rotate(306deg) brightness(88%) contrast(87%);
+  transition: filter 0.2s;
+}
+
+
+/* ── Badge panier ── */
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--pink);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Menu hamburger (caché sur desktop) ── */
+.menu-toggle {
+  display: none;
+  background: transparent;
+  color: var(--pink);
+  padding: 8px;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — MOBILE
+══════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 64px;
+    left: 0;
+    right: 0;
+    background: white;
+    flex-direction: column;
+    gap: 0;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+  }
+
+  .nav-links.active {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .nav-links li {
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--pink-light);
+  }
+
+  .nav-links li:last-child {
+    border-bottom: none;
+  }
+
+  .navbar-container {
+    padding: 0 16px;
+  }
+}

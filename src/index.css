@@ -1,0 +1,54 @@
+/* ══════════════════════════════════════
+   RESET + VARIABLES CSS — Floresia
+══════════════════════════════════════ */
+
+:root {
+  /* Couleurs principales */
+  --pink: #C0478A;
+  --pink-dark: #B03070;
+  --pink-light: #FDE8EE;
+  --pink-mid: #F5C0D4;
+  
+  --green: #5C8A4E;
+  --green-dark: #3D6B35;
+  --green-light: #F0EDEA;
+  
+  --beige: #FBF7F4;
+  --white: #FFFFFF;
+  
+  --text-dark: #3D2530;
+  --text-mid: #7A5C66;
+  --text-light: #B89AA4;
+  
+  --border: #EFD8E2;
+}
+
+/* Reset CSS basique */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--beige);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}

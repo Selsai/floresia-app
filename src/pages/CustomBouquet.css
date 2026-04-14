@@ -1,0 +1,875 @@
+/* ============================================================ */
+/* CONFIGURATEUR BOUQUET PERSONNALISÉ — Floresia               */
+/* ============================================================ */
+
+.custom-bouquet {
+  min-height: 100vh;
+  background: var(--beige);
+}
+
+/* ── HEADER ──────────────────────────────────────────────────── */
+
+.custom-header {
+  background: linear-gradient(135deg, var(--pink) 0%, var(--pink-dark) 100%);
+  padding: 60px 0;
+  text-align: center;
+  color: white;
+}
+
+.custom-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.custom-header p {
+  font-size: 18px;
+  opacity: 0.95;
+}
+
+/* ── BARRE DE PROGRESSION ────────────────────────────────────── */
+
+.progress-section {
+  background: white;
+  padding: 32px 0;
+  border-bottom: 2px solid var(--border);
+}
+
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* Ligne de connexion entre les étapes */
+.progress-steps::before {
+  content: '';
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--border);
+  z-index: 0;
+}
+
+/* Chaque étape est maintenant un <button> pour la navigation */
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: default;
+}
+
+/* Étapes visitées = cliquables */
+.progress-step:not(.locked) {
+  cursor: pointer;
+}
+
+/* Étapes futures = grises et non-cliquables */
+.progress-step.locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--text-light);
+  transition: all 0.25s;
+}
+
+.progress-step.active .step-number {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: white;
+}
+
+.progress-step.current .step-number {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(192, 71, 138, 0.3);
+}
+
+/* Hover uniquement sur les étapes accessibles */
+.progress-step:not(.locked):not(.current):hover .step-number {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.step-label {
+  font-size: 13px;
+  color: var(--text-mid);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.progress-step.active .step-label {
+  color: var(--pink);
+}
+
+/* ── LAYOUT PRINCIPAL ────────────────────────────────────────── */
+
+.custom-main {
+  padding: 48px 0 80px;
+}
+
+.custom-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+}
+
+.config-panel {
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  padding: 40px;
+  min-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-content h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  color: var(--pink);
+  margin-bottom: 8px;
+}
+
+.step-subtitle {
+  color: var(--text-mid);
+  margin-bottom: 28px;
+}
+
+.optional-label {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-light);
+}
+
+/* ── OPTIONS GRID (occasions, compléments) ───────────────────── */
+
+.options-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.occasions-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.secondary-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.option-card {
+  background: var(--beige);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.option-card:hover {
+  border-color: var(--pink);
+  transform: translateY(-2px);
+}
+
+.option-card.selected {
+  background: var(--pink-light);
+  border-color: var(--pink);
+  border-width: 3px;
+}
+
+.option-icon { font-size: 36px; }
+
+.option-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.option-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.option-price {
+  font-size: 14px;
+  color: var(--pink);
+  font-weight: 600;
+}
+
+/* ── COMPLÉMENTS (secondary-card) ────────────────────────────── */
+
+.secondary-card {
+  flex-direction: row;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 16px;
+}
+
+.secondary-img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   ÉTAPE 2 — Onglets catégories + liste scrollable
+   ════════════════════════════════════════════════════════════════ */
+
+.step2-flowers {
+  display: flex;
+  flex-direction: column;
+  /* La zone scroll prend toute la hauteur disponible */
+  height: 100%;
+}
+
+/* ── Onglets ── */
+.category-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.category-tab {
+  position: relative;
+  padding: 8px 18px;
+  border: 2px solid var(--border);
+  border-radius: 50px;
+  background: var(--beige);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.category-tab:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+
+.category-tab.active {
+  background: var(--pink);
+  border-color: var(--pink);
+  color: white;
+}
+
+/* Badge nombre de tiges sélectionnées sur l'onglet */
+.tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  color: var(--pink);
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.category-tab:not(.active) .tab-badge {
+  background: var(--pink);
+  color: white;
+}
+
+/* ── Zone scrollable ── */
+.flowers-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 420px;      /* hauteur fixe : scroll intégré dans le panneau */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 6px;    /* espace pour la scrollbar */
+  /* Scrollbar stylisée */
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink) transparent;
+}
+
+.flowers-scroll-area::-webkit-scrollbar {
+  width: 4px;
+}
+.flowers-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+.flowers-scroll-area::-webkit-scrollbar-thumb {
+  background: var(--pink);
+  border-radius: 4px;
+}
+
+/* ── Flower item ── */
+.flower-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--beige);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  transition: all 0.2s;
+  min-height: 110px;
+  flex-shrink: 0;
+}
+
+.flower-item:hover {
+  border-color: var(--pink);
+}
+
+.flower-item.selected {
+  background: var(--pink-light);
+  border-color: var(--pink);
+  border-width: 3px;
+}
+
+.flower-item-img {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+}
+
+.flower-item-info {
+  flex: 1;
+  min-width: 0; /* évite le débordement texte */
+}
+
+.flower-item-info h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin-bottom: 4px;
+}
+
+.flower-meaning {
+  font-size: 13px;
+  color: var(--text-mid);
+  font-style: italic;
+  margin-bottom: 4px;
+}
+
+.flower-price {
+  font-size: 13px;
+  color: var(--pink);
+  font-weight: 600;
+}
+
+/* ── Quantités ── */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.quantity-controls button {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--pink);
+  background: white;
+  color: var(--pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.quantity-controls button:hover {
+  background: var(--pink);
+  color: white;
+}
+
+.quantity-controls span {
+  min-width: 28px;
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-dark);
+  font-size: 15px;
+}
+
+.btn-remove {
+  background: #ff4444 !important;
+  border-color: #ff4444 !important;
+  color: white !important;
+}
+.btn-remove:hover {
+  background: #cc0000 !important;
+  border-color: #cc0000 !important;
+}
+
+.btn-add-flower {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--pink);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-add-flower:hover {
+  background: var(--pink-dark);
+}
+
+/* ── Récap chips sélection ── */
+.selection-recap {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 2px solid var(--border);
+}
+
+.recap-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.recap-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recap-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 12px;
+  background: var(--pink-light);
+  border: 1.5px solid var(--pink);
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pink);
+}
+
+.recap-chip button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: none;
+  background: var(--pink);
+  color: white;
+  cursor: pointer;
+  font-size: 10px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.recap-chip button:hover {
+  background: var(--pink-dark);
+}
+
+/* ── CONFIG SECTIONS (étape 4) ──────────────────────────────── */
+
+.config-section {
+  margin-bottom: 32px;
+}
+
+.config-section h3 {
+  font-size: 18px;
+  color: var(--text-dark);
+  margin-bottom: 16px;
+}
+
+.config-section textarea {
+  width: 100%;
+  padding: 14px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.config-section textarea:focus {
+  border-color: var(--pink);
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 8px;
+}
+
+/* ── RUBAN ──────────────────────────────────────────────────── */
+
+.ribbon-options-new {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.ribbon-option-new {
+  background: var(--beige);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.ribbon-option-new:hover   { border-color: var(--pink); }
+
+.ribbon-option-new.selected {
+  background: var(--pink-light);
+  border-color: var(--pink);
+  border-width: 3px;
+}
+
+.ribbon-option-new span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+/* Masque SVG du ruban */
+.ribbon-colored {
+  width: 60px;
+  height: 60px;
+  -webkit-mask-image: url('../assets/ruban.png');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-image: url('../assets/ruban.png');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+/* ── NAVIGATION ─────────────────────────────────────────────── */
+
+.step-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 32px;
+  padding-top: 28px;
+  border-top: 2px solid var(--border);
+}
+
+.btn-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border: 2px solid var(--pink);
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-previous {
+  background: white;
+  color: var(--pink);
+}
+.btn-previous:hover:not(:disabled) { background: var(--pink-light); }
+
+.btn-next {
+  background: var(--pink);
+  color: white;
+}
+.btn-next:hover:not(:disabled) { background: var(--pink-dark); }
+
+.btn-nav:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-add-cart {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 32px;
+  background: var(--pink);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-add-cart:hover {
+  background: var(--pink-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(192, 71, 138, 0.3);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   PANNEAU DROIT — APERÇU
+   ════════════════════════════════════════════════════════════════ */
+
+.preview-panel { position: relative; }
+
+.preview-sticky {
+  position: sticky;
+  top: 100px;
+  background: white;
+  border: 2px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 24px;
+}
+
+.preview-sticky h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: var(--pink);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.bouquet-preview {
+  background: var(--beige);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  min-height: 220px;
+}
+
+.preview-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 180px;
+  width: 100%;
+}
+
+/* ── Layouts adaptatifs de l'aperçu ── */
+
+.preview-flowers-wrap {
+  width: 100%;
+}
+
+/* 1 fleur → centrée */
+.preview-layout-single {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 2–3 fleurs → rangée centrée */
+.preview-layout-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 4+ fleurs → grille auto-fill équilibrée */
+.preview-layout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+  gap: 10px;
+  justify-items: center;
+}
+
+.preview-flower-small {
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.13));
+  transition: transform 0.2s;
+}
+
+.preview-flower-small:hover { transform: scale(1.08); }
+
+/* Placeholder quand aucune fleur */
+.preview-placeholder {
+  text-align: center;
+  opacity: 0.5;
+}
+.preview-placeholder span {
+  font-size: 64px;
+  display: block;
+  margin-bottom: 12px;
+}
+.preview-placeholder p { color: var(--text-mid); }
+
+/* ── Ruban aperçu ── */
+.preview-ribbon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.preview-ribbon-colored {
+  width: 60px;
+  height: 60px;
+  -webkit-mask-image: url('../assets/ruban.png');
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-image: url('../assets/ruban.png');
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+/* ── Résumé ── */
+.bouquet-summary h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 14px;
+}
+
+.bouquet-summary ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bouquet-summary li {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text-mid);
+}
+
+.bouquet-summary li:last-child { border-bottom: none; }
+
+.bouquet-summary strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.total-stems {
+  border-top: 2px solid var(--pink) !important;
+  padding-top: 10px !important;
+  margin-top: 4px;
+  font-size: 15px !important;
+}
+.total-stems strong { color: var(--pink); }
+
+/* ── Prix ── */
+.preview-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  background: var(--pink-light);
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.preview-price span   { font-size: 14px; color: var(--text-mid); }
+.preview-price strong { font-size: 26px; color: var(--pink); }
+
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1024px) {
+  .custom-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-panel { order: -1; }
+  .preview-sticky { position: static; }
+}
+
+@media (max-width: 768px) {
+  .custom-header h1  { font-size: 28px; }
+  .custom-header p   { font-size: 15px; }
+
+  .occasions-grid    { grid-template-columns: repeat(2, 1fr); }
+  .secondary-grid    { grid-template-columns: 1fr; }
+
+  .ribbon-options-new {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .category-tabs     { gap: 6px; }
+  .category-tab      { padding: 6px 12px; font-size: 13px; }
+
+  .flowers-scroll-area { max-height: 340px; }
+
+  .flower-item-img   { width: 70px; height: 70px; }
+  .flower-item       { min-height: 90px; padding: 10px; }
+
+  .preview-flower-small {
+    width: 72px;
+    height: 72px;
+  }
+
+  .preview-layout-grid {
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+  }
+
+  .step-navigation   { flex-direction: column; }
+  .btn-nav           { width: 100%; justify-content: center; }
+}
