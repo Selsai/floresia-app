@@ -1,492 +1,544 @@
+import { useState, useEffect } from 'react';
+
 import { useParams, Link } from 'react-router-dom';
-import { FiCalendar, FiClock, FiUser, FiArrowLeft, FiArrowRight, FiShare2, FiMessageCircle } from 'react-icons/fi';
-import { FaFacebook, FaTwitter, FaPinterest, FaLinkedin } from 'react-icons/fa';
-import blogPrintemps from '../assets/blog/blog-printemps.png';
-import blogEntretien from '../assets/blog/blog-entretien.png';
-import blogCouleurs from '../assets/blog/blog-couleurs.png';
-import blogTendances from '../assets/blog/blog-tendances.png';
-import blogDiy from '../assets/blog/blog-diy.png';
-import blogValentine from '../assets/blog/blog-valentine.png';
-import blogComposition from '../assets/blog/blog-composition.png';
-import blogComestibles from '../assets/blog/blog-comestibles.png';
-import blogMariage from '../assets/blog/blog-mariage.png';
+
+import {
+  FiCalendar,
+  FiClock,
+  FiUser,
+  FiArrowLeft,
+  FiArrowRight,
+  FiShare2,
+  FiMessageCircle,
+  FiImage,
+  FiX,
+  FiTrash2,
+  FiCornerDownRight,
+  FiSend,
+} from 'react-icons/fi';
+
+import {
+  FaFacebook,
+  FaTwitter,
+  FaPinterest,
+  FaLinkedin,
+} from 'react-icons/fa';
+
+import {
+  articlesApi,
+  commentsApi,
+  resolveUploadUrl,
+} from '../services/api';
+
+import { useAuth } from '../context/AuthContext';
+import { useConfirm } from '../context/ConfirmContext';
+
 import './BlogArticle.css';
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}
+
+function displayName(author) {
+  return `${author.firstName} ${author.lastName.charAt(0)}.`;
+}
+
+function initials(author) {
+  return `${author.firstName.charAt(0)}${author.lastName.charAt(0)}`;
+}
+
+// Colore les mentions "@Prénom" dans le texte affiché
+function renderWithMentions(content) {
+  const parts = content.split(/(@[A-Za-zÀ-ÿ]+)/g);
+
+  return parts.map((part, i) =>
+    part.startsWith('@') ? (
+      <span key={i} className="mention">
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+}
+
+function CommentForm({
+  articleId,
+  parentId,
+  taggedUser,
+  onPosted,
+  onCancel,
+  commenters,
+  token,
+}) {
+  const [content, setContent] = useState(
+    taggedUser ? `@${taggedUser.firstName} ` : ''
+  );
+
+  const [taggedUserId, setTaggedUserId] = useState(
+    taggedUser?.id || null
+  );
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [tagQuery, setTagQuery] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleContentChange = (e) => {
+    const value = e.target.value;
+
+    setContent(value);
+
+    const match = value.match(/@([A-Za-zÀ-ÿ]*)$/);
+
+    if (match) {
+      setTagQuery(match[1].toLowerCase());
+      setShowDropdown(true);
+    } else {
+      setShowDropdown(false);
+    }
+  };
+
+  const handleSelectTag = (user) => {
+    const newContent = content.replace(
+      /@([A-Za-zÀ-ÿ]*)$/,
+      `@${user.firstName} `
+    );
+
+    setContent(newContent);
+    setTaggedUserId(user.id);
+    setShowDropdown(false);
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview(null);
+  };
+
+  const filteredCommenters = commenters.filter((c) =>
+    c.firstName.toLowerCase().startsWith(tagQuery)
+  );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!content.trim()) return;
+
+    setSubmitting(true);
+
+    try {
+      const formData = new FormData();
+
+      formData.append('content', content.trim());
+      formData.append('articleId', articleId);
+
+      if (parentId) {
+        formData.append('parentId', parentId);
+      }
+
+      if (taggedUserId) {
+        formData.append('taggedUserId', taggedUserId);
+      }
+
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
+
+      await commentsApi.create(formData, token);
+
+      setContent('');
+      removeImage();
+
+      onPosted();
+
+      if (onCancel) {
+        onCancel();
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <form className="comment-form" onSubmit={handleSubmit}>
+      <div className="comment-textarea-wrap">
+        <textarea
+          placeholder="Écrivez votre commentaire... (utilisez @ pour mentionner quelqu'un)"
+          rows="3"
+          value={content}
+          onChange={handleContentChange}
+          required
+        />
+
+        {showDropdown && filteredCommenters.length > 0 && (
+          <ul className="mention-dropdown">
+            {filteredCommenters.map((user) => (
+              <li
+                key={user.id}
+                onClick={() => handleSelectTag(user)}
+              >
+                {user.firstName} {user.lastName.charAt(0)}.
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {imagePreview && (
+        <div className="comment-image-preview">
+          <img src={imagePreview} alt="Aperçu" />
+
+          <button type="button" onClick={removeImage}>
+            <FiX />
+          </button>
+        </div>
+      )}
+
+      {error && <p className="field-error">{error}</p>}
+
+      <div className="comment-form-actions">
+        <label className="attach-image-btn">
+          <FiImage /> Ajouter une image
+
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            onChange={handleImageChange}
+            hidden
+          />
+        </label>
+
+        <div className="comment-form-buttons">
+          {onCancel && (
+            <button
+              type="button"
+              className="btn-cancel-reply"
+              onClick={onCancel}
+            >
+              Annuler
+            </button>
+          )}
+
+          <button type="submit" disabled={submitting}>
+            <FiSend /> {submitting ? 'Envoi…' : 'Publier'}
+          </button>
+        </div>
+      </div>
+    </form>
+  );
+}
+
+function CommentItem({
+  comment,
+  articleId,
+  currentUser,
+  canComment,
+  commenters,
+  token,
+  onChanged,
+  isReply,
+}) {
+  const [replying, setReplying] = useState(false);
+
+  // Utilise la confirmation personnalisée de l'application
+  const { confirm } = useConfirm();
+
+  const canDelete =
+    currentUser &&
+    (currentUser.role === 'ADMIN' ||
+      currentUser.id === comment.author.id);
+
+  const handleDelete = async () => {
+    const ok = await confirm({
+      title: 'Supprimer ce commentaire',
+      message:
+        'Cette action est définitive et ne peut pas être annulée.',
+    });
+
+    if (!ok) return;
+
+    try {
+      await commentsApi.remove(comment.id, token);
+      onChanged();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  return (
+    <div
+      className={`comment ${
+        isReply ? 'comment-reply' : ''
+      }`}
+    >
+      <div className="comment-avatar">
+        {initials(comment.author)}
+      </div>
+
+      <div className="comment-content">
+        <div className="comment-header">
+          <strong>{displayName(comment.author)}</strong>
+
+          <span className="comment-date">
+            {formatDate(comment.createdAt)}
+          </span>
+        </div>
+
+        <p>{renderWithMentions(comment.content)}</p>
+
+        {comment.imageUrl && (
+          <img
+            className="comment-image"
+            src={resolveUploadUrl(comment.imageUrl)}
+            alt="Photo jointe"
+          />
+        )}
+
+        <div className="comment-actions">
+          {canComment && !isReply && (
+            <button
+              className="comment-action-btn"
+              onClick={() => setReplying(!replying)}
+            >
+              <FiCornerDownRight /> Répondre
+            </button>
+          )}
+
+          {canDelete && (
+            <button
+              className="comment-action-btn danger"
+              onClick={handleDelete}
+            >
+              <FiTrash2 /> Supprimer
+            </button>
+          )}
+        </div>
+
+        {replying && (
+          <CommentForm
+            articleId={articleId}
+            parentId={comment.id}
+            taggedUser={comment.author}
+            commenters={commenters}
+            token={token}
+            onPosted={onChanged}
+            onCancel={() => setReplying(false)}
+          />
+        )}
+
+        {comment.replies?.length > 0 && (
+          <div className="comment-replies">
+            {comment.replies.map((reply) => (
+              <CommentItem
+                key={reply.id}
+                comment={reply}
+                articleId={articleId}
+                currentUser={currentUser}
+                canComment={canComment}
+                commenters={commenters}
+                token={token}
+                onChanged={onChanged}
+                isReply
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function BlogArticle() {
   const { id } = useParams();
 
-  // Base de données complète des articles avec contenu
-  const articles = [
-    {
-      id: 1,
-      title: '10 fleurs de printemps pour égayer votre intérieur',
-      category: 'Conseils',
-      excerpt: 'Découvrez notre sélection de fleurs printanières qui apporteront fraîcheur et couleur à votre maison dès les premiers beaux jours.',
-      image: blogPrintemps,
-      date: '15 février 2026',
-      readTime: '5 min',
-      author: 'Marie Dubois',
-      authorBio: 'Fleuriste passionnée depuis 15 ans',
-      content: `
-        <p>Le printemps approche et avec lui l'envie de renouveau ! Quoi de mieux que des fleurs fraîches pour célébrer cette saison pleine de promesses ? Voici notre sélection de 10 fleurs printanières qui transformeront votre intérieur.</p>
+  const { user, token, isAuthenticated } = useAuth();
 
-        <h2>1. Les Tulipes</h2>
-        <p>Emblématiques du printemps, les tulipes offrent une palette de couleurs incroyable. Du blanc pur au rouge profond, en passant par le rose tendre et le jaune vif, elles s'adaptent à tous les styles de décoration.</p>
-        
-        <p><strong>Astuce d'entretien :</strong> Coupez les tiges en biseau et changez l'eau tous les jours. Les tulipes continuent de pousser dans le vase !</p>
+  const [articles, setArticles] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-        <h2>2. Les Jonquilles</h2>
-        <p>Avec leurs trompettes dorées, les jonquilles annoncent le retour du soleil. Leur parfum délicat embaume toute la maison et leur couleur jaune éclatante illumine n'importe quelle pièce.</p>
+  const [comments, setComments] = useState([]);
+  const [commentsLoading, setCommentsLoading] = useState(true);
 
-        <h2>3. Les Jacinthes</h2>
-        <p>Ces fleurs parfumées au charme romantique sont parfaites pour créer une ambiance printanière. Leurs grappes serrées de petites fleurs dégagent un parfum enivrant.</p>
+  const [commenters, setCommenters] = useState([]);
 
-        <blockquote>
-          "Les fleurs de printemps sont les rêves de l'hiver racontés, le matin, à la table des anges." - Khalil Gibran
-        </blockquote>
+  useEffect(() => {
+    articlesApi
+      .list()
+      .then(setArticles)
+      .finally(() => setLoading(false));
+  }, []);
 
-        <h2>4. Les Pivoines</h2>
-        <p>Généreuses et élégantes, les pivoines sont les reines du printemps. Leurs pétales froissés et leur parfum subtil en font des fleurs très prisées pour les bouquets raffinés.</p>
+  const loadComments = () => {
+    setCommentsLoading(true);
 
-        <h2>5. Les Renoncules</h2>
-        <p>Avec leurs pétales papier froissé disposés en rosace, les renoncules apportent une touche de délicatesse. Disponibles dans de nombreux coloris, elles se marient parfaitement avec d'autres fleurs.</p>
+    commentsApi
+      .listByArticle(id)
+      .then(setComments)
+      .finally(() => setCommentsLoading(false));
+  };
 
-        <h2>Conseils d'entretien général</h2>
-        <ul>
-          <li>Changez l'eau tous les 2-3 jours</li>
-          <li>Recoupez les tiges régulièrement</li>
-          <li>Évitez l'exposition directe au soleil</li>
-          <li>Retirez les feuilles qui trempent dans l'eau</li>
-          <li>Ajoutez un conservateur floral dans l'eau</li>
-        </ul>
+  useEffect(() => {
+    loadComments();
 
-        <p>En suivant ces conseils, vos bouquets printaniers garderont leur fraîcheur pendant 7 à 10 jours. N'hésitez pas à mélanger plusieurs variétés pour créer des compositions uniques !</p>
-      `
-    },
-    {
-      id: 2,
-      title: 'Comment conserver un bouquet plus longtemps ?',
-      category: 'Tutos',
-      excerpt: 'Nos astuces d\'expert pour prolonger la vie de vos bouquets jusqu\'à 2 semaines.',
-      image: blogEntretien,
-      date: '10 février 2026',
-      readTime: '4 min',
-      author: 'Sophie Laurent',
-      authorBio: 'Experte en art floral',
-      content: `
-        <p>Vous venez de recevoir un magnifique bouquet et vous voulez en profiter le plus longtemps possible ? Suivez nos conseils d'expert pour prolonger la vie de vos fleurs jusqu'à 2 semaines !</p>
+    commentsApi
+      .listCommenters(id)
+      .then(setCommenters)
+      .catch(() => {});
+  }, [id]);
 
-        <h2>1. La préparation initiale est cruciale</h2>
-        <p>Dès réception de votre bouquet, plusieurs gestes sont essentiels :</p>
-        
-        <ul>
-          <li><strong>Coupez les tiges en biseau</strong> à environ 2-3 cm du bas, avec un couteau bien aiguisé</li>
-          <li><strong>Retirez toutes les feuilles</strong> qui risquent de tremper dans l'eau</li>
-          <li><strong>Utilisez un vase propre</strong> rempli d'eau fraîche</li>
-          <li><strong>Ajoutez de la nourriture pour fleurs</strong> (fournie avec le bouquet)</li>
-        </ul>
+  if (loading) {
+    return (
+      <div className="container">
+        <p>Chargement…</p>
+      </div>
+    );
+  }
 
-        <h2>2. L'emplacement idéal</h2>
-        <p>L'endroit où vous placez votre bouquet a un impact majeur sur sa durée de vie :</p>
-        
-        <blockquote>
-          Évitez les sources de chaleur, les courants d'air et la lumière directe du soleil. Une température fraîche (15-18°C) est idéale.
-        </blockquote>
-
-        <h2>3. L'entretien quotidien</h2>
-        <p>Pour maximiser la longévité de votre bouquet :</p>
-        
-        <ul>
-          <li>Changez l'eau tous les 2 jours (tous les jours pour les tulipes)</li>
-          <li>Recoupez les tiges de 1 cm à chaque changement d'eau</li>
-          <li>Nettoyez le vase à chaque fois</li>
-          <li>Retirez les fleurs fanées au fur et à mesure</li>
-        </ul>
-
-        <h2>4. Astuces de grand-mère qui fonctionnent</h2>
-        <p>Certains remèdes naturels peuvent vraiment prolonger la vie de vos fleurs :</p>
-        
-        <ul>
-          <li><strong>Une pièce de cuivre</strong> dans l'eau limite le développement des bactéries</li>
-          <li><strong>Un morceau de sucre</strong> nourrit les fleurs</li>
-          <li><strong>Quelques gouttes de vinaigre</strong> acidifient l'eau et ralentissent la décomposition</li>
-          <li><strong>Une aspirine écrasée</strong> garde l'eau plus claire plus longtemps</li>
-        </ul>
-
-        <h2>5. Cas particuliers</h2>
-        <p><strong>Roses :</strong> Coupez les tiges sous l'eau pour éviter les bulles d'air. Elles peuvent durer jusqu'à 2 semaines.</p>
-        
-        <p><strong>Tulipes :</strong> Elles continuent de pousser dans le vase ! Recoupez-les régulièrement et changez l'eau quotidiennement.</p>
-        
-        <p><strong>Lys :</strong> Retirez les étamines (parties jaunes) pour éviter les taches et prolonger la floraison.</p>
-
-        <p>En appliquant ces conseils, vous pourrez profiter de vos bouquets bien plus longtemps. Et n'oubliez pas : même fanées, certaines fleurs comme les roses peuvent être séchées pour créer de jolies compositions !</p>
-      `
-    },
-    {
-      id: 3,
-      title: 'Signification des couleurs de roses',
-      category: 'Déco',
-      excerpt: 'Rouge pour la passion, blanc pour la pureté... Découvrez le langage secret des roses.',
-      image: blogCouleurs,
-      date: '5 février 2026',
-      readTime: '3 min',
-      author: 'Emma Martin',
-      authorBio: 'Spécialiste en symbolique florale',
-      content: `
-        <p>Les roses ne sont pas seulement belles, elles portent aussi des messages. Chaque couleur a sa propre signification. Voici le guide complet pour choisir la couleur parfaite selon votre message.</p>
-
-        <h2>🌹 Roses Rouges : La Passion</h2>
-        <p>Symbole universel de l'amour passionné et du désir, les roses rouges sont le choix classique pour déclarer sa flamme. Plus la teinte est foncée, plus le message d'amour est intense.</p>
-
-        <h2>🤍 Roses Blanches : La Pureté</h2>
-        <p>Elles symbolisent l'innocence, la pureté et les nouveaux départs. Parfaites pour un mariage ou pour exprimer un amour sincère et respectueux.</p>
-
-        <h2>💗 Roses Roses : La Tendresse</h2>
-        <p>Les roses roses représentent la douceur, l'admiration et la gratitude. Le rose clair évoque la tendresse, tandis que le rose foncé exprime une reconnaissance profonde.</p>
-
-        <blockquote>
-          "La rose parle toutes les langues d'amour connues du cœur humain." - Dorothy Parker
-        </blockquote>
-
-        <h2>💛 Roses Jaunes : L'Amitié</h2>
-        <p>Contrairement à ce qu'on pourrait croire, les roses jaunes ne sont pas un mauvais présage ! Elles symbolisent l'amitié joyeuse, la joie de vivre et l'optimisme.</p>
-
-        <h2>🧡 Roses Orange : L'Enthousiasme</h2>
-        <p>Énergiques et vibrantes, elles expriment l'enthousiasme, le désir et la fascination. Un excellent choix pour féliciter quelqu'un ou célébrer un succès.</p>
-
-        <h2>💜 Roses Violettes : Le Mystère</h2>
-        <p>Rares et envoûtantes, les roses violettes représentent le coup de foudre, l'enchantement et le mystère. Elles sont parfaites pour exprimer une admiration profonde.</p>
-
-        <h2>🖤 Roses Noires : La Fin d'un Cycle</h2>
-        <p>En réalité d'un rouge très foncé, elles symbolisent la fin d'une relation ou d'une période. Utilisées avec tact, elles peuvent aussi représenter un nouveau départ.</p>
-
-        <h2>Associations de couleurs</h2>
-        <ul>
-          <li><strong>Rouge + Blanc :</strong> Unité et harmonie</li>
-          <li><strong>Rose + Jaune :</strong> Amitié amoureuse</li>
-          <li><strong>Orange + Rose :</strong> Célébration joyeuse</li>
-        </ul>
-
-        <p>Maintenant que vous connaissez le langage des roses, vous pouvez choisir la couleur parfaite pour transmettre exactement le message que vous souhaitez !</p>
-      `
-    },
-    {
-      id: 4,
-      title: 'Les tendances florales 2026',
-      category: 'Actualités',
-      excerpt: 'Fleurs séchées, compositions XXL, couleurs terracotta...',
-      image: blogTendances,
-      date: '1er février 2026',
-      readTime: '6 min',
-      author: 'Marie Dubois',
-      authorBio: 'Fleuriste passionnée depuis 15 ans',
-      content: `
-        <p>L'univers floral évolue constamment et 2026 s'annonce comme une année riche en nouveautés ! Entre retour à la nature et audace créative, découvrez les tendances qui vont transformer nos intérieurs.</p>
-
-        <h2>1. Le grand retour des fleurs séchées</h2>
-        <p>Les fleurs séchées continuent leur ascension fulgurante. Pampas, eucalyptus, immortelles... Ces compositions durables séduisent par leur côté bohème et écologique.</p>
-        
-        <p><strong>Pourquoi c'est tendance :</strong> Zéro entretien, durabilité, esthétique naturelle et prix abordable sur le long terme.</p>
-
-        <h2>2. Les tons terracotta et terre cuite</h2>
-        <p>Exit le total blanc ! 2026 mise sur les couleurs chaudes : terracotta, rouille, caramel et tons terre. Ces teintes s'harmonisent parfaitement avec le mobilier naturel.</p>
-
-        <blockquote>
-          "Les couleurs chaudes apportent une sensation de cocooning et de sérénité, parfaites pour créer un havre de paix chez soi."
-        </blockquote>
-
-        <h2>3. Les compositions XXL spectaculaires</h2>
-        <p>On voit grand en 2026 ! Les arrangements floraux surdimensionnés font leur entrée dans nos salons. Branches de cerisier japonais, magnolias géants, ou compositions de deux mètres de haut...</p>
-
-        <h2>4. Le minimalisme japonais</h2>
-        <p>L'art de l'ikebana inspire fortement les tendances 2026. Moins c'est plus : une seule branche, quelques fleurs soigneusement choisies, dans un vase épuré.</p>
-
-        <h2>Les couleurs phares 2026</h2>
-        <ul>
-          <li><strong>Terracotta</strong> : La star absolue de l'année</li>
-          <li><strong>Vert sauge</strong> : Apaisant et raffiné</li>
-          <li><strong>Bleu nuit</strong> : Pour les ambiances dramatiques</li>
-          <li><strong>Blanc crème</strong> : L'indémodable, toujours élégant</li>
-        </ul>
-
-        <p>Ces tendances reflètent notre besoin de nature, d'authenticité et de durabilité. N'hésitez pas à mixer plusieurs styles pour créer votre propre univers floral !</p>
-      `
-    },
-    {
-      id: 5,
-      title: 'DIY : Créer une couronne de fleurs séchées',
-      category: 'Tutos',
-      excerpt: 'Un tutoriel pas à pas pour réaliser votre propre couronne.',
-      image: blogDiy,
-      date: '28 janvier 2026',
-      readTime: '8 min',
-      author: 'Sophie Laurent',
-      authorBio: 'Experte en art floral',
-      content: `
-        <p>Créer sa propre couronne de fleurs séchées est plus simple qu'il n'y paraît ! Suivez ce tutoriel pas à pas pour réaliser une décoration murale bohème et durable.</p>
-
-        <h2>Matériel nécessaire</h2>
-        <ul>
-          <li>Un cercle en osier ou fil de fer (diamètre 30-40 cm)</li>
-          <li>Fleurs séchées : pampa, eucalyptus, lavande, immortelles</li>
-          <li>Fil de fer fin</li>
-          <li>Ciseaux</li>
-          <li>Ruban (optionnel)</li>
-        </ul>
-
-        <h2>Étape 1 : Préparer votre base</h2>
-        <p>Commencez par préparer votre cercle. Si vous utilisez du fil de fer, formez un cercle et fixez les extrémités solidement. L'osier est plus facile à manipuler pour les débutants.</p>
-
-        <h2>Étape 2 : Créer des petits bouquets</h2>
-        <p>Assemblez de petits bouquets de 5-7 tiges. Variez les textures : pampas duveteux, eucalyptus fin, immortelles colorées. Fixez chaque bouquet avec du fil de fer.</p>
-
-        <blockquote>
-          "La clé d'une belle couronne réside dans la diversité des textures et des hauteurs. N'ayez pas peur de mélanger les styles !"
-        </blockquote>
-
-        <h2>Étape 3 : Fixer les bouquets sur le cercle</h2>
-        <p>Attachez vos petits bouquets sur le cercle en les faisant se chevaucher légèrement. Travaillez dans le même sens pour un résultat harmonieux.</p>
-
-        <h2>Conseils de conservation</h2>
-        <ul>
-          <li>Évitez l'humidité et la lumière directe du soleil</li>
-          <li>Dépoussiérez délicatement avec un plumeau</li>
-          <li>Votre couronne peut durer plusieurs années !</li>
-        </ul>
-
-        <p>Votre couronne DIY est terminée ! Elle apportera une touche bohème et naturelle à votre décoration tout en étant 100% durable.</p>
-      `
-    },
-    {
-      id: 6,
-      title: 'Quelles fleurs offrir pour la Saint-Valentin ?',
-      category: 'Conseils',
-      excerpt: 'Au-delà des roses rouges classiques, découvrez des alternatives romantiques.',
-      image: blogValentine,
-      date: '25 janvier 2026',
-      readTime: '4 min',
-      author: 'Emma Martin',
-      authorBio: 'Spécialiste en symbolique florale',
-      content: `
-        <p>La Saint-Valentin approche et vous cherchez l'alternative parfaite aux traditionnelles roses rouges ? Découvrez nos suggestions originales pour déclarer votre flamme avec style !</p>
-
-        <h2>1. Les pivoines : la reine romantique</h2>
-        <p>Volumineuses et délicates, les pivoines roses ou blanches incarnent le romantisme absolu. Leur parfum subtil et leurs pétales soyeux en font un choix exceptionnel.</p>
-
-        <p><strong>Message :</strong> Amour sincère et prospérité du couple</p>
-
-        <h2>2. Les renoncules : l'élégance en bouquet</h2>
-        <p>Ces fleurs aux pétales papier froissé offrent une palette de couleurs romantiques. Les renoncules roses pâles ou fuchsia sont particulièrement tendres.</p>
-
-        <blockquote>
-          "Les renoncules symbolisent le charme radieux de l'être aimé. Un message subtil et raffiné."
-        </blockquote>
-
-        <h2>3. Les tulipes : la déclaration discrète</h2>
-        <p>Les tulipes roses ou violettes sont parfaites pour une déclaration douce. Moins démonstrative que la rose rouge, elles expriment un amour profond et respectueux.</p>
-
-        <h2>Notre sélection par budget</h2>
-        <ul>
-          <li><strong>Petit budget (30-40€)</strong> : Bouquet de tulipes multicolores</li>
-          <li><strong>Budget moyen (45-60€)</strong> : Renoncules et roses mélangées</li>
-          <li><strong>Sans limite (70€+)</strong> : Composition pivoines premium</li>
-        </ul>
-
-        <p>Cette année, surprenez votre moitié avec un bouquet original qui sort des sentiers battus tout en restant profondément romantique.</p>
-      `
-    },
-    {
-      id: 7,
-      title: 'L\'art de composer un bouquet harmonieux',
-      category: 'Tutos',
-      excerpt: 'Les règles d\'or pour créer des compositions florales équilibrées.',
-      image: blogComposition,
-      date: '20 janvier 2026',
-      readTime: '7 min',
-      author: 'Marie Dubois',
-      authorBio: 'Fleuriste passionnée depuis 15 ans',
-      content: `
-        <p>Composer un bouquet harmonieux est un art accessible à tous ! Voici les règles d'or pour créer des arrangements floraux équilibrés.</p>
-
-        <h2>La règle des tiers</h2>
-        <p>Un bouquet réussi respecte les proportions 3-2-1 : 3 types de fleurs principales, 2 types de feuillages, 1 élément de remplissage (gypsophile, etc.).</p>
-
-        <h2>Jouer avec les hauteurs</h2>
-        <p>Variez les hauteurs pour créer du dynamisme. Les fleurs les plus hautes au centre, les plus courtes sur les côtés.</p>
-
-        <blockquote>
-          "Un bon bouquet raconte une histoire à travers ses textures, ses couleurs et ses formes."
-        </blockquote>
-
-        <h2>Les formes de bouquets</h2>
-        <ul>
-          <li><strong>Rond</strong> : Classique et équilibré</li>
-          <li><strong>Cascade</strong> : Romantique pour mariages</li>
-          <li><strong>Asymétrique</strong> : Moderne et tendance</li>
-        </ul>
-
-        <p>Avec ces règles en tête, vous êtes prêt à créer des compositions dignes d'un fleuriste professionnel !</p>
-      `
-    },
-    {
-      id: 8,
-      title: 'Fleurs comestibles : lesquelles choisir ?',
-      category: 'Conseils',
-      excerpt: 'Capucines, pensées, violettes... Découvrez quelles fleurs peuvent sublimer vos plats.',
-      image: blogComestibles,
-      date: '15 janvier 2026',
-      readTime: '5 min',
-      author: 'Sophie Laurent',
-      authorBio: 'Experte en art floral',
-      content: `
-        <p>Les fleurs ne servent pas qu'à décorer ! Découvrez quelles fleurs peuvent sublimer vos plats et pâtisseries en toute sécurité.</p>
-
-        <h2>⚠️ Règle n°1 : Sécurité avant tout</h2>
-        <p>Toutes les fleurs ne sont PAS comestibles ! Consommez uniquement des fleurs cultivées sans pesticides et identifiées avec certitude.</p>
-
-        <h2>Les fleurs comestibles stars</h2>
-        <ul>
-          <li><strong>Capucines</strong> : Saveur poivrée proche du cresson</li>
-          <li><strong>Pensées et violettes</strong> : Douces et légèrement sucrées</li>
-          <li><strong>Hibiscus</strong> : Acidulé et fruité</li>
-        </ul>
-
-        <blockquote>
-          "Les fleurs comestibles transforment un plat ordinaire en œuvre d'art culinaire."
-        </blockquote>
-
-        <p>Les fleurs comestibles apportent couleur, saveur et originalité à votre cuisine. Lancez-vous avec prudence et créativité !</p>
-      `
-    },
-    {
-      id: 9,
-      title: 'Décorer sa table de mariage avec des fleurs',
-      category: 'Déco',
-      excerpt: 'Centres de table, arches florales, bouquets suspendus...',
-      image: blogMariage,
-      date: '10 janvier 2026',
-      readTime: '6 min',
-      author: 'Emma Martin',
-      authorBio: 'Spécialiste en symbolique florale',
-      content: `
-        <p>Les fleurs sont l'âme d'une décoration de mariage. Découvrez toutes nos idées pour créer une ambiance florale inoubliable.</p>
-
-        <h2>1. Le bouquet de mariée</h2>
-        <p>Pièce maîtresse de votre look, il doit s'harmoniser avec votre robe et le thème du mariage. Rond et classique, retombant romantique, ou asymétrique moderne ?</p>
-
-        <h2>2. Les centres de table</h2>
-        <p>Optez pour des hauteurs variées : compositions hautes sur pied pour certaines tables, arrangements bas et généreux pour d'autres.</p>
-
-        <blockquote>
-          "Une décoration florale réussie raconte l'histoire d'amour du couple à travers les couleurs et les formes."
-        </blockquote>
-
-        <h2>Styles de décoration</h2>
-        <ul>
-          <li><strong>Champêtre chic</strong> : Pivoines, roses anciennes, eucalyptus</li>
-          <li><strong>Romantique</strong> : Roses, hortensias, tons pastels</li>
-          <li><strong>Bohème</strong> : Pampas, fleurs séchées, tons terracotta</li>
-        </ul>
-
-        <p>Avec une décoration florale bien pensée, votre mariage restera gravé dans les mémoires !</p>
-      `
-    }
-  ];
-
-  const article = articles.find(a => a.id === parseInt(id));
+  const article = articles.find((a) => a.id === id);
 
   if (!article) {
     return (
       <div className="article-not-found">
         <div className="container">
           <h1>Article introuvable</h1>
-          <Link to="/blog" className="back-to-blog">Retour au blog</Link>
+
+          <Link to="/blog" className="back-to-blog">
+            Retour au blog
+          </Link>
         </div>
       </div>
     );
   }
 
   const relatedArticles = articles
-    .filter(a => a.id !== article.id && a.category === article.category)
+    .filter(
+      (a) =>
+        a.id !== article.id &&
+        a.category === article.category
+    )
     .slice(0, 3);
 
-  const currentIndex = articles.findIndex(a => a.id === article.id);
-  const prevArticle = currentIndex > 0 ? articles[currentIndex - 1] : null;
-  const nextArticle = currentIndex < articles.length - 1 ? articles[currentIndex + 1] : null;
+  const currentIndex = articles.findIndex(
+    (a) => a.id === article.id
+  );
 
-  const comments = [
-    {
-      id: 1,
-      author: 'Julie B.',
-      date: '16 février 2026',
-      content: 'Merci pour ces conseils ! J\'ai suivi vos recommandations et mes tulipes ont duré presque 2 semaines 🌷'
-    },
-    {
-      id: 2,
-      author: 'Marc L.',
-      date: '14 février 2026',
-      content: 'Article très complet, merci ! Je ne savais pas pour l\'astuce du cuivre, je vais essayer.'
-    },
-    {
-      id: 3,
-      author: 'Sophie M.',
-      date: '13 février 2026',
-      content: 'Super article ! Vous pourriez faire un article sur les fleurs d\'été ?'
-    }
-  ];
+  const prevArticle =
+    currentIndex > 0
+      ? articles[currentIndex - 1]
+      : null;
 
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
+  const nextArticle =
+    currentIndex < articles.length - 1
+      ? articles[currentIndex + 1]
+      : null;
+
+  const totalComments = comments.reduce(
+    (sum, c) => sum + 1 + (c.replies?.length || 0),
+    0
+  );
+
+  const shareUrl =
+    typeof window !== 'undefined'
+      ? window.location.href
+      : '';
+
+  // Autorise les commentaires uniquement si l'utilisateur
+  // est connecté ET que son adresse email est vérifiée.
+  const canComment =
+    isAuthenticated && user?.isEmailVerified;
 
   return (
     <div className="blog-article">
-      
-      {/* HERO IMAGE */}
-      <div className="article-hero" style={{ backgroundImage: `url(${article.image})` }}>
+      <div
+        className="article-hero"
+        style={{
+          backgroundImage: `url(${article.imageUrl})`,
+        }}
+      >
         <div className="hero-overlay">
           <div className="container">
             <Link to="/blog" className="back-link">
               <FiArrowLeft /> Retour au blog
             </Link>
-            <span className="article-category-badge">{article.category}</span>
-            <h1 className="article-hero-title">{article.title}</h1>
+
+            <span className="article-category-badge">
+              {article.category}
+            </span>
+
+            <h1 className="article-hero-title">
+              {article.title}
+            </h1>
+
             <div className="article-hero-meta">
-              <span><FiUser size={16} /> {article.author}</span>
-              <span><FiCalendar size={16} /> {article.date}</span>
-              <span><FiClock size={16} /> {article.readTime} de lecture</span>
+              <span>
+                <FiUser size={16} />{' '}
+                {article.displayAuthorName}
+              </span>
+
+              <span>
+                <FiCalendar size={16} />{' '}
+                {formatDate(article.createdAt)}
+              </span>
+
+              <span>
+                <FiClock size={16} />{' '}
+                {article.readTime} de lecture
+              </span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* CONTENT */}
       <article className="article-content-wrapper">
         <div className="container">
           <div className="article-layout">
-            
-            {/* MAIN CONTENT */}
             <div className="article-main">
-              <div 
+              <div
                 className="article-content"
-                dangerouslySetInnerHTML={{ __html: article.content }}
+                dangerouslySetInnerHTML={{
+                  __html: article.content,
+                }}
               />
 
-              {/* AUTHOR BIO */}
               <div className="author-bio">
                 <div className="author-avatar">
-                  {article.author.charAt(0)}
+                  {article.displayAuthorName.charAt(0)}
                 </div>
+
                 <div className="author-info">
-                  <h4>À propos de {article.author}</h4>
-                  <p>{article.authorBio}</p>
+                  <h4>
+                    À propos de {article.displayAuthorName}
+                  </h4>
+
+                  <p>{article.displayAuthorBio}</p>
                 </div>
               </div>
 
-              {/* SHARE */}
               <div className="article-share">
-                <h4><FiShare2 /> Partager cet article</h4>
+                <h4>
+                  <FiShare2 /> Partager cet article
+                </h4>
+
                 <div className="share-buttons">
-                  <a 
+                  <a
                     href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -494,7 +546,8 @@ export default function BlogArticle() {
                   >
                     <FaFacebook /> Facebook
                   </a>
-                  <a 
+
+                  <a
                     href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${article.title}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -502,7 +555,8 @@ export default function BlogArticle() {
                   >
                     <FaTwitter /> Twitter
                   </a>
-                  <a 
+
+                  <a
                     href={`https://pinterest.com/pin/create/button/?url=${shareUrl}&description=${article.title}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -510,7 +564,8 @@ export default function BlogArticle() {
                   >
                     <FaPinterest /> Pinterest
                   </a>
-                  <a 
+
+                  <a
                     href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -521,83 +576,131 @@ export default function BlogArticle() {
                 </div>
               </div>
 
-              {/* COMMENTS */}
               <div className="article-comments">
-                <h3><FiMessageCircle /> {comments.length} commentaires</h3>
-                
+                <h3>
+                  <FiMessageCircle /> {totalComments}{' '}
+                  commentaire
+                  {totalComments !== 1 ? 's' : ''}
+                </h3>
+
+                {commentsLoading && (
+                  <p>Chargement des commentaires…</p>
+                )}
+
                 <div className="comments-list">
-                  {comments.map(comment => (
-                    <div key={comment.id} className="comment">
-                      <div className="comment-avatar">{comment.author.charAt(0)}</div>
-                      <div className="comment-content">
-                        <div className="comment-header">
-                          <strong>{comment.author}</strong>
-                          <span className="comment-date">{comment.date}</span>
-                        </div>
-                        <p>{comment.content}</p>
-                      </div>
-                    </div>
+                  {comments.map((comment) => (
+                    <CommentItem
+                      key={comment.id}
+                      comment={comment}
+                      articleId={article.id}
+                      currentUser={
+                        isAuthenticated
+                          ? {
+                              id: user.id,
+                              role: user.role,
+                            }
+                          : null
+                      }
+                      canComment={canComment}
+                      commenters={commenters}
+                      token={token}
+                      onChanged={loadComments}
+                    />
                   ))}
                 </div>
 
-                <form className="comment-form" onSubmit={(e) => { e.preventDefault(); alert('Merci pour votre commentaire ! 💬'); }}>
-                  <h4>Laisser un commentaire</h4>
-                  <input type="text" placeholder="Votre nom" required />
-                  <textarea placeholder="Votre commentaire..." rows="4" required></textarea>
-                  <button type="submit">Publier</button>
-                </form>
-              </div>
+                {canComment ? (
+                  <CommentForm
+                    articleId={article.id}
+                    commenters={commenters}
+                    token={token}
+                    onPosted={loadComments}
+                  />
+                ) : isAuthenticated ? (
+                  <div className="verify-email-banner comment-verify-banner">
+                    <span>
+                      Votre adresse email n'est pas encore vérifiée.
+                    </span>
 
+                    <Link
+                      to="/verification-email"
+                      state={{ email: user.email }}
+                    >
+                      Vérifier mon email →
+                    </Link>
+                  </div>
+                ) : (
+                  <p className="login-to-comment">
+                    <Link to="/compte">
+                      Connectez-vous
+                    </Link>{' '}
+                    pour laisser un commentaire.
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* SIDEBAR */}
             <aside className="article-sidebar">
-              
               <div className="sidebar-widget sticky-widget">
                 <h4>Sur le même thème</h4>
+
                 <div className="related-mini">
-                  {relatedArticles.map(related => (
-                    <Link 
-                      to={`/blog/${related.id}`} 
+                  {relatedArticles.map((related) => (
+                    <Link
+                      to={`/blog/${related.id}`}
                       key={related.id}
                       className="related-mini-item"
                     >
-                      <img src={related.image} alt={related.title} />
+                      <img
+                        src={related.imageUrl}
+                        alt={related.title}
+                      />
+
                       <div>
-                        <span className="mini-category">{related.category}</span>
+                        <span className="mini-category">
+                          {related.category}
+                        </span>
+
                         <h5>{related.title}</h5>
                       </div>
                     </Link>
                   ))}
                 </div>
               </div>
-
             </aside>
-
           </div>
         </div>
       </article>
 
-      {/* NAVIGATION PREV/NEXT */}
       <div className="article-navigation">
         <div className="container">
           <div className="nav-grid">
             {prevArticle ? (
-              <Link to={`/blog/${prevArticle.id}`} className="nav-item prev">
+              <Link
+                to={`/blog/${prevArticle.id}`}
+                className="nav-item prev"
+              >
                 <FiArrowLeft />
+
                 <div>
                   <span>Article précédent</span>
                   <h4>{prevArticle.title}</h4>
                 </div>
               </Link>
-            ) : <div></div>}
-            
+            ) : (
+              <div></div>
+            )}
+
             {nextArticle && (
-              <Link to={`/blog/${nextArticle.id}`} className="nav-item next">
+              <Link
+                to={`/blog/${nextArticle.id}`}
+                className="nav-item next"
+              >
                 <div>
                   <span>Article suivant</span>
                   <h4>{nextArticle.title}</h4>
                 </div>
+
                 <FiArrowRight />
               </Link>
             )}
@@ -605,18 +708,30 @@ export default function BlogArticle() {
         </div>
       </div>
 
-      {/* RELATED ARTICLES */}
       {relatedArticles.length > 0 && (
         <section className="related-articles">
           <div className="container">
             <h2>Articles similaires</h2>
+
             <div className="related-grid">
-              {relatedArticles.map(related => (
-                <Link to={`/blog/${related.id}`} key={related.id} className="related-card">
-                  <img src={related.image} alt={related.title} />
+              {relatedArticles.map((related) => (
+                <Link
+                  to={`/blog/${related.id}`}
+                  key={related.id}
+                  className="related-card"
+                >
+                  <img
+                    src={related.imageUrl}
+                    alt={related.title}
+                  />
+
                   <div className="related-content">
-                    <span className="related-category">{related.category}</span>
+                    <span className="related-category">
+                      {related.category}
+                    </span>
+
                     <h3>{related.title}</h3>
+
                     <p>{related.excerpt}</p>
                   </div>
                 </Link>
@@ -625,7 +740,6 @@ export default function BlogArticle() {
           </div>
         </section>
       )}
-
     </div>
   );
 }

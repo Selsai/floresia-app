@@ -1,25 +1,169 @@
+// Cart.jsx
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { FiTrash2, FiShoppingBag, FiArrowRight, FiEdit2 } from 'react-icons/fi';
+import { useAuth } from '../context/AuthContext';
+import { addressesApi, ordersApi, paymentApi, CUSTOM_BOUQUET_PRODUCT_ID } from '../services/api';
+import { fetchNearbyFlorists } from '../data/stores';
+import { FiTrash2, FiShoppingBag, FiArrowRight, FiEdit2, FiTruck, FiCreditCard, FiLock, FiMapPin } from 'react-icons/fi';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 import './Cart.css';
+
+// Icône personnalisée en forme de fleur, aux couleurs Florésia
+// Icône personnalisée : pin vert avec une fleur rose dessinée en SVG
+const floristIcon = L.divIcon({
+  className: 'florist-marker',
+  html: `
+    <div style="
+      width: 38px;
+      height: 38px;
+      background: #4CAF7D;
+      border: 3px solid white;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    ">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        style="transform: rotate(45deg);"
+        aria-hidden="true"
+      >
+        <g fill="#E85D9C">
+          <circle cx="12" cy="7" r="3.2" />
+          <circle cx="17" cy="12" r="3.2" />
+          <circle cx="12" cy="17" r="3.2" />
+          <circle cx="7" cy="12" r="3.2" />
+        </g>
+        <circle cx="12" cy="12" r="3" fill="#FFD966" />
+      </svg>
+    </div>
+  `,
+  iconSize: [38, 38],
+  iconAnchor: [19, 38],
+  popupAnchor: [0, -38],
+});
 
 export default function Cart() {
   const navigate = useNavigate();
-  const { cart, removeFromCart, updateQuantity, getTotalPrice, getTotalItems } = useCart();
+  const { cart, removeFromCart, updateQuantity, getTotalPrice, getTotalItems, clearCart } = useCart();
+  const { isAuthenticated, token, user } = useAuth();
+
+  const [checkoutError, setCheckoutError] = useState('');
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+
+  const [deliveryMethod, setDeliveryMethod] = useState('DELIVERY');
+  const [userAddresses, setUserAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);  const [nearbyStores, setNearbyStores] = useState([]);
+  const [selectedStoreId, setSelectedStoreId] = useState(null);
+
+  // États pour le chargement des fleuristes
+  const [storesLoading, setStoresLoading] = useState(false);
+  const [storesError, setStoresError] = useState('');
 
   const subtotal = getTotalPrice();
-  const deliveryFee = subtotal >= 50 ? 0 : 5.90;
+  const deliveryFee = deliveryMethod === 'PICKUP' ? 0 : (subtotal >= 50 ? 0 : 5.90);
   const total = subtotal + deliveryFee;
 
+  useEffect(() => {
+  if (!isAuthenticated || !token) return;
+  addressesApi
+    .list(token)
+    .then((addresses) => {
+      setUserAddresses(addresses);
+      const defaultAddr = addresses.find((a) => a.isDefault) || addresses[0];
+      if (defaultAddr) setSelectedAddressId(defaultAddr.id);
+    })
+    .catch(() => {});
+}, [isAuthenticated, token]);
+
+const selectedAddress = userAddresses.find((a) => a.id === selectedAddressId) || null;
+
+  useEffect(() => {
+  if (deliveryMethod !== 'PICKUP' || !selectedAddress?.lat || !selectedAddress?.lng) return;
+
+  setStoresLoading(true);
+  setStoresError('');
+  fetchNearbyFlorists(selectedAddress.lat, selectedAddress.lng)
+    .then((stores) => {
+      setNearbyStores(stores);
+      if (stores.length > 0) setSelectedStoreId(stores[0].id);
+    })
+    .catch((err) => setStoresError(err.message))
+    .finally(() => setStoresLoading(false));
+}, [deliveryMethod, selectedAddress]);
+
   const handleEditCustomBouquet = (item) => {
-    // Rediriger vers le configurateur avec les données du bouquet
-    navigate('/personnaliser', { 
-      state: { 
-        editMode: true,
-        cartItemId: item.id,
-        config: item.customConfig 
-      } 
-    });
+    navigate('/personnaliser', { state: { editMode: true, cartItemId: item.id, config: item.customConfig } });
+  };
+
+  const handleCheckout = async () => {
+    setCheckoutError('');
+
+    if (!isAuthenticated) {
+      navigate('/compte');
+      return;
+    }
+
+    if (deliveryMethod === 'PICKUP' && !selectedStoreId) {
+      setCheckoutError('Sélectionnez un magasin pour le retrait.');
+      return;
+    }
+
+    setCheckoutLoading(true);
+    try {
+      const addresses = await addressesApi.list(token);
+      if (addresses.length === 0) {
+        setCheckoutError('Veuillez renseigner une adresse par défaut dans votre profil avant de passer commande.');
+        setCheckoutLoading(false);
+        return;
+      }
+      const address = addresses.find((a) => a.isDefault) || addresses[0];
+
+      const order = await ordersApi.create(
+        {
+          addressId: address.id,
+          totalAmount: total,
+          deliveryMethod,
+          pickupStoreId: deliveryMethod === 'PICKUP' ? selectedStoreId : undefined,
+          items: cart.map((item) => {
+            if (item.category === 'Personnalisé') {
+              const cfg = item.customConfig || {};
+              const flowersList = (cfg.selectedFlowers || [])
+                .map((f) => `${f.quantity}x ${f.name}`)
+                .join(', ');
+
+              return {
+                productId: CUSTOM_BOUQUET_PRODUCT_ID,
+                quantity: 1,
+                unitPrice: item.price,
+                customNote: `Occasion: ${cfg.occasionName || '-'} | Fleurs: ${flowersList || '-'} | Ruban: ${cfg.ribbonColor || '-'}${cfg.message ? ' | Message: ' + cfg.message : ''}`,
+              };
+            }
+
+            return {
+              productId: item.id,
+              quantity: item.quantity || 1,
+              unitPrice: item.price,
+            };
+          }),
+        },
+        token
+      );
+
+      const { checkoutUrl } = await paymentApi.createCheckoutSession(order.id, token);
+      clearCart();
+      window.location.href = checkoutUrl;
+    } catch (err) {
+      setCheckoutError(err.message);
+      setCheckoutLoading(false);
+    }
   };
 
   if (cart.length === 0) {
@@ -30,9 +174,7 @@ export default function Cart() {
             <FiShoppingBag className="empty-icon" />
             <h1>Votre panier est vide</h1>
             <p>Découvrez nos magnifiques bouquets et commencez vos achats</p>
-            <Link to="/boutique" className="btn-continue-shopping">
-              Découvrir la boutique
-            </Link>
+            <Link to="/boutique" className="btn-continue-shopping">Découvrir la boutique</Link>
           </div>
         </div>
       </div>
@@ -41,195 +183,201 @@ export default function Cart() {
 
   return (
     <div className="cart-page">
-      
-      {/* HEADER */}
       <section className="cart-header">
         <div className="container">
-          <div className="breadcrumb">
-            <Link to="/">Accueil</Link> / <span>Panier</span>
-          </div>
+          <div className="breadcrumb"><Link to="/">Accueil</Link> / <span>Panier</span></div>
           <h1 className="cart-title">Mon Panier</h1>
-          <p className="cart-subtitle">
-            {getTotalItems()} {getTotalItems() > 1 ? 'articles' : 'article'}
-          </p>
+          <p className="cart-subtitle">{getTotalItems()} {getTotalItems() > 1 ? 'articles' : 'article'}</p>
         </div>
       </section>
 
-      {/* MAIN CONTENT */}
       <div className="cart-layout">
         <div className="container">
           <div className="cart-grid">
-            
-            {/* LISTE DES PRODUITS */}
             <div className="cart-items">
-              
-              {/* Free delivery banner */}
-              {subtotal < 50 && (
+              {deliveryMethod === 'DELIVERY' && subtotal < 50 && (
                 <div className="delivery-banner">
-                  <p>
-                    🚚 Plus que <strong>{(50 - subtotal).toFixed(2)} €</strong> pour profiter de la 
-                    <strong> livraison gratuite</strong> !
-                  </p>
+                  <p><FiTruck className="delivery-icon" /> Plus que <strong>{(50 - subtotal).toFixed(2)} €</strong> pour profiter de la <strong> livraison gratuite</strong> !</p>
                   <div className="progress-bar">
-                    <div 
-                      className="progress-fill" 
-                      style={{ width: `${Math.min((subtotal / 50) * 100, 100)}%` }}
-                    />
+                    <div className="progress-fill" style={{ width: `${Math.min((subtotal / 50) * 100, 100)}%` }} />
                   </div>
                 </div>
               )}
 
-              {cart.map(item => (
+              {cart.map((item) => (
                 <div key={item.id} className="cart-item">
-                  
-                  {/* IMAGE - Clic désactivé pour bouquets personnalisés */}
                   {item.category === 'Personnalisé' ? (
-                    <div className="item-image">
-                      <img src={item.image} alt={item.name} />
-                    </div>
+                    <div className="item-image"><img src={item.image} alt={item.name} /></div>
                   ) : (
                     <Link to={`/produit/${item.id}`} className="item-image">
-                      <img src={item.image} alt={item.name} />
+                      <img src={item.imageUrl || item.image} alt={item.name} />
                     </Link>
                   )}
 
                   <div className="item-details">
-                    {/* NOM - Clic désactivé pour bouquets personnalisés */}
                     {item.category === 'Personnalisé' ? (
                       <span className="item-name">{item.name}</span>
                     ) : (
-                      <Link to={`/produit/${item.id}`} className="item-name">
-                        {item.name}
-                      </Link>
+                      <Link to={`/produit/${item.id}`} className="item-name">{item.name}</Link>
                     )}
-                    
+
                     <p className="item-category">{item.category}</p>
-                    
-                    {/* DÉTAILS BOUQUET PERSONNALISÉ */}
+
                     {item.category === 'Personnalisé' && item.customConfig && (
                       <div className="custom-details">
                         {item.customConfig.occasionName && (
-                          <p className="custom-occasion">
-                            <strong>Occasion :</strong> {item.customConfig.occasionName}
-                          </p>
+                          <p className="custom-occasion"><strong>Occasion :</strong> {item.customConfig.occasionName}</p>
                         )}
                         {item.customConfig.totalStems && (
-                          <p className="custom-flowers">
-                            <strong>Composition :</strong> {item.customConfig.totalStems} tiges
-                          </p>
+                          <p className="custom-flowers"><strong>Composition :</strong> {item.customConfig.totalStems} tiges</p>
                         )}
-                        {item.customConfig.secondaryFlowers && item.customConfig.secondaryFlowers.length > 0 && (
-                          <p className="custom-secondary">
-                            <strong>Compléments :</strong> {item.customConfig.secondaryFlowers.length} type{item.customConfig.secondaryFlowers.length > 1 ? 's' : ''}
-                          </p>
-                        )}
-                        {item.customConfig.ribbonColor && (
-                          <p className="custom-ribbon">
-                            <strong>Ruban :</strong> {
-                              item.customConfig.ribbonColor === 'red' ? 'Rouge' :
-                              item.customConfig.ribbonColor === 'pink' ? 'Rose' :
-                              item.customConfig.ribbonColor === 'white' ? 'Blanc' :
-                              item.customConfig.ribbonColor === 'beige' ? 'Beige' :
-                              item.customConfig.ribbonColor === 'gold' ? 'Doré' :
-                              item.customConfig.ribbonColor === 'blue' ? 'Bleu' :
-                              item.customConfig.ribbonColor === 'khaki' ? 'Vert kaki' :
-                              item.customConfig.ribbonColor === 'multicolor' ? 'Multicolore' :
-                              item.customConfig.ribbonColor
-                            }
-                          </p>
-                        )}
-                        {item.customConfig.message && (
-                          <p className="custom-message">
-                            <em>"{item.customConfig.message}"</em>
-                          </p>
-                        )}
-                        
-                        {/* BOUTON MODIFIER */}
-                        <button 
-                          className="btn-edit-custom"
-                          onClick={() => handleEditCustomBouquet(item)}
-                          title="Modifier ce bouquet"
-                        >
+                        <button className="btn-edit-custom" onClick={() => handleEditCustomBouquet(item)} title="Modifier ce bouquet">
                           <FiEdit2 /> Modifier la composition
                         </button>
                       </div>
                     )}
-                    
-                    {/* OCCASIONS POUR PRODUITS NORMAUX */}
-                    {item.category !== 'Personnalisé' && item.occasions && (
-                      <div className="item-occasions">
-                        {item.occasions.slice(0, 2).map(occ => (
-                          <span key={occ} className="occasion-tag">{occ}</span>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
-                  {/* QUANTITÉ - Désactivée pour bouquets personnalisés */}
                   {item.category !== 'Personnalisé' && (
                     <div className="item-quantity">
-                      <button 
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        aria-label="Diminuer quantité"
-                      >
-                        −
-                      </button>
-                      <input 
-                        type="number" 
-                        value={item.quantity} 
-                        onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
-                        min="1"
-                      />
-                      <button 
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        aria-label="Augmenter quantité"
-                      >
-                        +
-                      </button>
+                      <button onClick={() => updateQuantity(item.id, item.quantity - 1)} aria-label="Diminuer quantité">−</button>
+                      <input type="number" value={item.quantity} onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)} min="1" />
+                      <button onClick={() => updateQuantity(item.id, item.quantity + 1)} aria-label="Augmenter quantité">+</button>
                     </div>
                   )}
 
-                  <div className="item-price">
-                    {(item.price * (item.quantity || 1)).toFixed(2)} €
-                  </div>
+                  <div className="item-price">{(item.price * (item.quantity || 1)).toFixed(2)} €</div>
 
-                  <button 
-                    className="item-remove"
-                    onClick={() => removeFromCart(item.id)}
-                    aria-label="Retirer du panier"
-                  >
+                  <button className="item-remove" onClick={() => removeFromCart(item.id)} aria-label="Retirer du panier">
                     <FiTrash2 />
                   </button>
-
                 </div>
               ))}
 
-              <Link to="/boutique" className="continue-shopping-link">
-                ← Continuer mes achats
-              </Link>
-
+              <Link to="/boutique" className="continue-shopping-link">← Continuer mes achats</Link>
             </div>
 
-            {/* RÉSUMÉ DE COMMANDE */}
             <div className="cart-summary">
               <h2>Résumé de la commande</h2>
-              
+
+              <div className="delivery-method-choice">
+                <button
+                  type="button"
+                  className={deliveryMethod === 'DELIVERY' ? 'active' : ''}
+                  onClick={() => setDeliveryMethod('DELIVERY')}
+                >
+                  <FiTruck /> Livraison à domicile
+                </button>
+                <button
+                  type="button"
+                  className={deliveryMethod === 'PICKUP' ? 'active' : ''}
+                  onClick={() => setDeliveryMethod('PICKUP')}
+                >
+                  <FiMapPin /> Retrait en boutique
+                </button>
+              </div>
+
+              {deliveryMethod === 'PICKUP' && (
+                <div className="pickup-section">
+                  {userAddresses.length === 0 ? (
+                    <p className="pickup-warning">
+                      Ajoutez une adresse dans votre compte pour voir les fleuristes les plus proches.
+                    </p>
+                  ) : (
+                    <>
+                      {userAddresses.length > 1 && (
+                        <div className="form-group">
+                          <label>Rechercher autour de :</label>
+                          <select
+                            value={selectedAddressId || ''}
+                            onChange={(e) => setSelectedAddressId(e.target.value)}
+                            className="address-select"
+                          >
+                            {userAddresses.map((addr) => (
+                              <option key={addr.id} value={addr.id}>
+                                {addr.label} — {addr.street}, {addr.zipCode} {addr.city}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                      )}
+
+                      {!selectedAddress?.lat ? (
+                        <p className="pickup-warning">
+                          Cette adresse n'a pas de coordonnées enregistrées. Modifiez-la via l'autocomplete pour activer la recherche.
+                        </p>
+                      ) : (
+                        <>
+                          <div className="pickup-map">
+                            <MapContainer
+                              center={[48.8566, 2.3522]}
+                              zoom={12}
+                              style={{ height: 200, width: '100%', borderRadius: 12 }}
+                            >
+                              <TileLayer
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                attribution='&copy; OpenStreetMap contributors'
+                              />
+                              {nearbyStores.map((store) => (
+                                <Marker key={store.id} position={[store.lat, store.lng]} icon={floristIcon}>
+                                  <Popup>
+                                    <strong>{store.name}</strong><br />
+                                    {store.address && <>{store.address}<br /></>}
+                                    {store.distance.toFixed(1)} km
+                                  </Popup>
+                                </Marker>
+                              ))}
+                            </MapContainer>
+                          </div>
+
+                          {storesLoading && <p className="pickup-warning">Recherche des fleuristes à proximité…</p>}
+                          {storesError && <p className="pickup-warning">{storesError}</p>}
+
+                          {!storesLoading && nearbyStores.length > 0 && (
+                            <p className="pickup-count">
+                              {nearbyStores.length} {nearbyStores.length > 1 ? 'fleuristes trouvés' : 'fleuriste trouvé'} à proximité
+                            </p>
+                          )}
+
+                          <div className="store-list">
+                            {nearbyStores.map((store) => (
+                              <label key={store.id} className="store-option">
+                                <input
+                                  type="radio"
+                                  name="store"
+                                  checked={selectedStoreId === store.id}
+                                  onChange={() => setSelectedStoreId(store.id)}
+                                />
+                                <div>
+                                  <strong>{store.name}</strong>
+                                  <span>{store.address ? `${store.address} — ` : ''}{store.distance.toFixed(1)} km</span>
+                                </div>
+                              </label>
+                            ))}
+                          </div>
+
+                          <p className="pickup-free-notice">✓ Retrait gratuit en boutique</p>
+                        </>
+                      )}
+                    </>
+                  )}
+                </div>
+              )}
+
               <div className="summary-line">
                 <span>Sous-total ({getTotalItems()} articles)</span>
                 <span>{subtotal.toFixed(2)} €</span>
               </div>
 
               <div className="summary-line">
-                <span>Livraison</span>
+                <span>{deliveryMethod === 'PICKUP' ? 'Retrait' : 'Livraison'}</span>
                 <span className={deliveryFee === 0 ? 'free' : ''}>
                   {deliveryFee === 0 ? 'GRATUIT' : `${deliveryFee.toFixed(2)} €`}
                 </span>
               </div>
 
-              {deliveryFee === 0 && (
-                <div className="free-delivery-notice">
-                  ✓ Vous bénéficiez de la livraison gratuite !
-                </div>
+              {deliveryMethod === 'DELIVERY' && deliveryFee === 0 && (
+                <div className="free-delivery-notice">✓ Vous bénéficiez de la livraison gratuite !</div>
               )}
 
               <div className="summary-divider" />
@@ -239,67 +387,32 @@ export default function Cart() {
                 <span className="total-amount">{total.toFixed(2)} €</span>
               </div>
 
-              <button className="btn-checkout">
-                Passer la commande
+                {checkoutError && (
+                <p className="auth-error">
+                  {checkoutError}{' '}
+                  {checkoutError.includes('adresse') && (
+                    <Link to="/compte" className="checkout-error-link">Aller à mon profil →</Link>
+                  )}
+                  {checkoutError.includes('email') && (
+                    <Link to="/verification-email" state={{ email: user?.email }} className="checkout-error-link">
+                      Vérifier mon email →
+                    </Link>
+                  )}
+                </p>
+              )}
+              <button className="btn-checkout" onClick={handleCheckout} disabled={checkoutLoading}>
+                {checkoutLoading ? 'Redirection…' : 'Passer la commande'}
                 <FiArrowRight />
               </button>
 
               <div className="payment-methods">
                 <p>Paiement sécurisé</p>
-                <div className="payment-icons">
-                  💳 🔒
-                </div>
+                <div className="payment-icons"><FiCreditCard /> <FiLock /></div>
               </div>
-
-              <div className="summary-features">
-                <div className="feature-item">
-                  <span>🚚</span>
-                  <p>Livraison express 24h</p>
-                </div>
-                <div className="feature-item">
-                  <span>🌸</span>
-                  <p>Fraîcheur garantie</p>
-                </div>
-                <div className="feature-item">
-                  <span>📦</span>
-                  <p>Emballage soigné</p>
-                </div>
-              </div>
-
             </div>
-
           </div>
         </div>
       </div>
-
-      {/* REASSURANCE */}
-      <section className="cart-reassurance">
-        <div className="container">
-          <div className="reassurance-grid">
-            <div className="reassurance-item">
-              <div className="reassurance-icon">🚚</div>
-              <h3>Livraison rapide</h3>
-              <p>Express en 24h partout en France</p>
-            </div>
-            <div className="reassurance-item">
-              <div className="reassurance-icon">💳</div>
-              <h3>Paiement sécurisé</h3>
-              <p>Transactions 100% protégées</p>
-            </div>
-            <div className="reassurance-item">
-              <div className="reassurance-icon">🌸</div>
-              <h3>Fraîcheur garantie</h3>
-              <p>Remboursement si non satisfait</p>
-            </div>
-            <div className="reassurance-item">
-              <div className="reassurance-icon">💬</div>
-              <h3>Service client</h3>
-              <p>Disponible 7j/7 par chat</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
     </div>
   );
 }

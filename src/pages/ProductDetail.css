@@ -293,7 +293,15 @@
   background: var(--pink);
   color: white;
 }
+.btn-wishlist-large.active {
+  background: var(--pink);
+  color: white;
+}
 
+.btn-wishlist-large:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 /* ── SERVICES ── */
 .product-services {
   display: flex;

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import logo from '../assets/icons/Logo-Florésia.png';
+import logo from '../assets/icons/logo-floresia.png';
 import './Footer.css';
 
 export default function Footer() {

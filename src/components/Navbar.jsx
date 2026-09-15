@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { FiUser, FiMenu, FiX } from 'react-icons/fi';
 import { useCart } from '../context/CartContext';
-import logo from '../assets/icons/Logo-Florésia.png';
+import logo from '../assets/icons/logo-floresia.png';
 import cartIcon from '../assets/icons/icone-panier.png';
 import './Navbar.css';
 

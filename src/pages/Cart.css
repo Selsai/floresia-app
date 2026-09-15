@@ -135,6 +135,7 @@
 }
 
 /* Bannière livraison gratuite */
+
 .delivery-banner {
   background: linear-gradient(135deg, var(--green-light) 0%, #E8F5E0 100%);
   border: 2px solid var(--green);
@@ -167,7 +168,26 @@
   border-radius: 100px;
 }
 
+.delivery-icon {
+  vertical-align: middle;
+  margin-right: 6px;
+  color: var(--green);
+}
+
+.payment-icons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  color: var(--pink);
+}
+
+.payment-icons svg {
+  width: 22px;
+  height: 22px;
+}
+
 /* Article du panier */
+
 .cart-item {
   background: white;
   border: 2px solid var(--border);
@@ -485,7 +505,11 @@ span.item-name {
   transform: translateY(-2px);
   box-shadow: 0 6px 24px rgba(192, 71, 138, 0.4);
 }
-
+.checkout-error-link {
+  color: var(--pink);
+  font-weight: 600;
+  text-decoration: underline;
+}
 .payment-methods {
   text-align: center;
   padding: 20px 0;
@@ -525,6 +549,116 @@ span.item-name {
 }
 
 /* ══════════════════════════════════════
+   CHOIX LIVRAISON / RETRAIT
+══════════════════════════════════════ */
+
+.delivery-method-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.delivery-method-choice button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  background: white;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delivery-method-choice button.active {
+  border-color: var(--pink);
+  background: var(--pink-light);
+  color: var(--pink);
+}
+
+.pickup-section {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+}
+
+.pickup-map {
+  margin-bottom: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.pickup-warning {
+  font-size: 13px;
+  color: var(--text-mid);
+  padding: 12px;
+  background: var(--beige);
+  border-radius: 10px;
+}
+
+.pickup-count {
+  font-size: 13px;
+  color: var(--text-mid);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.store-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.store-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.store-option:hover {
+  border-color: var(--pink);
+}
+
+.store-option input {
+  margin-top: 3px;
+}
+
+.store-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--pink);
+  cursor: pointer;
+}
+
+.store-option strong {
+  display: block;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+.store-option span {
+  font-size: 12px;
+  color: var(--text-mid);
+}
+
+.pickup-free-notice {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #059669;
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════
    REASSURANCE
 ══════════════════════════════════════ */
 
@@ -560,7 +694,15 @@ span.item-name {
   font-size: 13px;
   color: var(--text-mid);
 }
-
+.address-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+}
 /* ══════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════ */

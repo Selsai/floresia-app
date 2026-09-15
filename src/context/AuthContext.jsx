@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { authApi } from '../services/api';
 
 const AuthContext = createContext();
 
@@ -12,136 +13,94 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Charger l'utilisateur depuis localStorage au démarrage
   useEffect(() => {
-    const savedUser = localStorage.getItem('floresia-user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
+    const savedToken =
+      localStorage.getItem('floresia-token') ||
+      sessionStorage.getItem('floresia-token');
+
+    if (!savedToken) {
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
+
+    authApi
+      .me(savedToken)
+      .then((profile) => {
+        setUser(profile);
+        setToken(savedToken);
+      })
+      .catch(() => {
+        localStorage.removeItem('floresia-token');
+        sessionStorage.removeItem('floresia-token');
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
-  // Sauvegarder l'utilisateur dans localStorage
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('floresia-user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('floresia-user');
+  const login = async (email, password, rememberMe = true) => {
+    try {
+      const data = await authApi.login({ email, password });
+
+      if (rememberMe) {
+        localStorage.setItem('floresia-token', data.token);
+        localStorage.setItem('floresia-remembered-email', email);
+      } else {
+        sessionStorage.setItem('floresia-token', data.token);
+        localStorage.removeItem('floresia-remembered-email');
+      }
+
+      setToken(data.token);
+      setUser(data.user);
+      return { success: true, user: data.user };
+    } catch (error) {
+      return { success: false, error: error.message };
     }
-  }, [user]);
-
-  const login = (email, password) => {
-    // Simulation de connexion (dans un vrai projet, appel API)
-    const mockUser = {
-      id: 1,
-      firstName: 'Sophie',
-      lastName: 'Martin',
-      email: email,
-      phone: '06 12 34 56 78',
-      memberSince: '2024',
-      points: 350,
-      addresses: [
-        {
-          id: 1,
-          type: 'Domicile',
-          name: 'Sophie Martin',
-          street: '15 rue de la Paix',
-          city: 'Paris',
-          postalCode: '75002',
-          phone: '06 12 34 56 78',
-          isDefault: true
-        }
-      ],
-      orders: [
-        {
-          id: '#FL-2026-001',
-          date: '5 mars 2026',
-          status: 'Livré',
-          total: 45.00,
-          items: [
-            { name: 'Bouquet Rosa Éternelle', quantity: 1, price: 32.00 }
-          ]
-        },
-        {
-          id: '#FL-2026-002',
-          date: '28 février 2026',
-          status: 'En cours',
-          total: 52.00,
-          items: [
-            { name: 'Jardin de Pivoines', quantity: 1, price: 52.00 }
-          ]
-        }
-      ],
-      wishlist: []
-    };
-
-    setUser(mockUser);
-    return { success: true, user: mockUser };
   };
 
-  const register = (userData) => {
-    // Simulation d'inscription (dans un vrai projet, appel API)
-    const newUser = {
-      id: Date.now(),
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      email: userData.email,
-      phone: userData.phone || '',
-      memberSince: new Date().getFullYear().toString(),
-      points: 0,
-      addresses: [],
-      orders: [],
-      wishlist: []
-    };
-
-    setUser(newUser);
-    return { success: true, user: newUser };
+  const register = async (userData) => {
+    try {
+      await authApi.register({
+        email: userData.email,
+        password: userData.password,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        phone: userData.phone || undefined,
+      });
+      return await login(userData.email, userData.password, true);
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   };
 
   const logout = () => {
+    localStorage.removeItem('floresia-token');
+    sessionStorage.removeItem('floresia-token');
+    setToken(null);
     setUser(null);
   };
 
-  const updateUser = (updatedData) => {
-    setUser(prev => ({ ...prev, ...updatedData }));
+  const updateUser = (updatedFields) => {
+    setUser((prev) => ({ ...prev, ...updatedFields }));
   };
 
-  const addToWishlist = (productId) => {
-    setUser(prev => ({
-      ...prev,
-      wishlist: [...prev.wishlist, productId]
-    }));
-  };
-
-  const removeFromWishlist = (productId) => {
-    setUser(prev => ({
-      ...prev,
-      wishlist: prev.wishlist.filter(id => id !== productId)
-    }));
-  };
-
-  const isInWishlist = (productId) => {
-    return user?.wishlist?.includes(productId) || false;
-  };
+  const getRememberedEmail = () =>
+    localStorage.getItem('floresia-remembered-email') || '';
 
   const value = {
     user,
+    token,
     isAuthenticated: !!user,
     isLoading,
     login,
     register,
     logout,
     updateUser,
-    addToWishlist,
-    removeFromWishlist,
-    isInWishlist
+    getRememberedEmail,
   };
 
   return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
   );
 };
