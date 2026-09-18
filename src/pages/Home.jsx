@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FiShoppingCart, FiHeart } from 'react-icons/fi';
 import heroImage from '../assets/accueil-hero.png';
-import chatbotIcon from '../assets/icons/iconChatbot.png';
 import { productsApi, CUSTOM_BOUQUET_PRODUCT_ID } from '../services/api';
 import './Home.css';
 
@@ -172,10 +171,6 @@ useEffect(() => {
           )}
         </div>
       </section>
-
-      <Link to="/chatbot" className="chatbot-fab" aria-label="Assistant chatbot">
-        <img src={chatbotIcon} alt="Chatbot" />
-      </Link>
 
     </div>
   );

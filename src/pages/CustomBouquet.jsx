@@ -1,73 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { FiChevronLeft, FiChevronRight, FiCheck, FiShoppingCart, FiPlus, FiMinus, FiX } from 'react-icons/fi';
+import { flowersApi } from '../services/api';
 import './CustomBouquet.css';
 
-// Import des fleurs
-import roseRouge from '../assets/flowers/rose-red.png';
-import roseRose from '../assets/flowers/rose-lilas.png';
-import roseBlanche from '../assets/flowers/rose-white.png';
-import roseJaune from '../assets/flowers/rose-yellow.png';
-import roseSaumon from '../assets/flowers/rose-saumon.png';
-
-import pivoineRose from '../assets/flowers/pivoine-rose.png';
-import pivoineBlanche from '../assets/flowers/pivoine-white.png';
-import pivoineOrange from '../assets/flowers/pivoine-orange.png';
-import pivoineSaumon from '../assets/flowers/pivone-saumon.png';
-
-import tulipeRose from '../assets/flowers/tulipe-pink.png';
-import tulipeRouge from '../assets/flowers/tulipe-rouge.png';
-import tulipeBlanche from '../assets/flowers/tulipe-blanche.png';
-import tulipeJaune from '../assets/flowers/tulipe-jaune.png';
-import tulipeFushia from '../assets/flowers/tulipe-fushia.png';
-import tulipeLilas from '../assets/flowers/tulipe-lilas.png';
-import tulipeSaumon from '../assets/flowers/tulipe-saumon.png';
-import tulipeOrange from '../assets/flowers/tulipe-orange.png';
-
-import lysPink from '../assets/flowers/lys-pink.png';
-import lysWhite from '../assets/flowers/lys-white.png';
-
-import renonculeRose from '../assets/flowers/renoncule-pink.png';
-import renonculeRouge from '../assets/flowers/renoncule-red.png';
-import renonculeSaumon from '../assets/flowers/renoncule-saumon.png';
-import renonculeBlanche from '../assets/flowers/renoncule-white.png';
-
-import dahliaPink from '../assets/flowers/dahlia-pink.png';
-import dahliaJaune from '../assets/flowers/dahlia-jaune.png';
-import dahliaFushia from '../assets/flowers/dahlia-fushia.png';
-import dahliaSaumon from '../assets/flowers/dahlia-saumon.png';
-import dahliaWhite from '../assets/flowers/dahlia-white.png';
-import dahliaBlue from '../assets/flowers/dahlia-blue.png';
-
-import margueriteOrange from '../assets/flowers/marguerite-orange.png';
-import margueritePink from '../assets/flowers/marguerite-pink.png';
-import margueriteWhite from '../assets/flowers/marguerite-white.png';
-
-import hortensiaBlue from '../assets/flowers/hortensia-blue.png';
-import hortensiaPink from '../assets/flowers/hortensia-pink.png';
-import hortensiaPurple from '../assets/flowers/hortensia-purple.png';
-import hortensiaWhite from '../assets/flowers/hortensia-white.png';
-
-import oeillet from '../assets/flowers/oeillet-pink.png';
-import oeilletBlue from '../assets/flowers/oeillet-blue.png';
-import oeilletSaumon from '../assets/flowers/oeillet-saumon.png';
-import oeilletWhite from '../assets/flowers/oeillet-white.png';
-
-import gypsophileBlue from '../assets/flowers/gysophile-blue.png';
-import gypsophilePink from '../assets/flowers/gysophile-pink.png';
-import gypsophileWhite from '../assets/flowers/gysophile-white.png';
-import gypsophileYellow from '../assets/flowers/gysophile-yellow.png';
-
-import feuillageEucalyptus from '../assets/flowers/feuillage-eucalyptus.png';
-import feuillageFougere from '../assets/flowers/feuillage-fougere.png';
-import feuillageRuscus from '../assets/flowers/feuillage-ruscus.png';
-
-import astilbePink from '../assets/flowers/astilbe-pink.png';
-import astilbeRed from '../assets/flowers/astilbe-red.png';
-import astilbeSaumon from '../assets/flowers/astilbe-saumon.png';
-
-// ─── Données statiques (hors composant) ──────────────────────────────────────
+// ─── Données statiques (occasions et rubans ne viennent pas de la base) ──────
 
 const OCCASIONS = [
   { id: 'birthday',  name: 'Anniversaire',  icon: '🎂' },
@@ -76,62 +14,6 @@ const OCCASIONS = [
   { id: 'mother',    name: 'Fête des mères', icon: '👩' },
   { id: 'thanks',    name: 'Remerciement',   icon: '🙏' },
   { id: 'love',      name: 'Déclaration',    icon: '❤️' },
-];
-
-const ALL_FLOWERS = [
-  { id: 'rose-red',        name: 'Rose Rouge',        price: 3.50, image: roseRouge,        category: 'Rose',       meaning: 'Passion et amour ardent'  },
-  { id: 'rose-pink',       name: 'Rose Rose',          price: 3.50, image: roseRose,         category: 'Rose',       meaning: 'Tendresse et admiration'  },
-  { id: 'rose-white',      name: 'Rose Blanche',       price: 3.50, image: roseBlanche,      category: 'Rose',       meaning: 'Pureté et innocence'      },
-  { id: 'rose-yellow',     name: 'Rose Jaune',         price: 3.50, image: roseJaune,        category: 'Rose',       meaning: 'Amitié et joie'           },
-  { id: 'rose-salmon',     name: 'Rose Saumon',        price: 3.50, image: roseSaumon,       category: 'Rose',       meaning: 'Gratitude'                },
-  { id: 'peony-pink',      name: 'Pivoine Rose',       price: 5.00, image: pivoineRose,      category: 'Pivoine',    meaning: 'Amour romantique'         },
-  { id: 'peony-white',     name: 'Pivoine Blanche',    price: 5.00, image: pivoineBlanche,   category: 'Pivoine',    meaning: 'Honneur et sincérité'     },
-  { id: 'peony-orange',    name: 'Pivoine Orange',     price: 5.00, image: pivoineOrange,    category: 'Pivoine',    meaning: 'Bonheur éclatant'         },
-  { id: 'peony-salmon',    name: 'Pivoine Saumon',     price: 5.00, image: pivoineSaumon,    category: 'Pivoine',    meaning: 'Douceur'                  },
-  { id: 'tulip-pink',      name: 'Tulipe Rose',        price: 2.50, image: tulipeRose,       category: 'Tulipe',     meaning: 'Affection'                },
-  { id: 'tulip-red',       name: 'Tulipe Rouge',       price: 2.50, image: tulipeRouge,      category: 'Tulipe',     meaning: 'Amour véritable'          },
-  { id: 'tulip-white',     name: 'Tulipe Blanche',     price: 2.50, image: tulipeBlanche,    category: 'Tulipe',     meaning: 'Pardon'                   },
-  { id: 'tulip-yellow',    name: 'Tulipe Jaune',       price: 2.50, image: tulipeJaune,      category: 'Tulipe',     meaning: 'Joie'                     },
-  { id: 'tulip-fushia',    name: 'Tulipe Fushia',      price: 2.50, image: tulipeFushia,     category: 'Tulipe',     meaning: 'Passion intense'          },
-  { id: 'tulip-purple',    name: 'Tulipe Lilas',       price: 2.50, image: tulipeLilas,      category: 'Tulipe',     meaning: 'Royauté'                  },
-  { id: 'tulip-salmon',    name: 'Tulipe Saumon',      price: 2.50, image: tulipeSaumon,     category: 'Tulipe',     meaning: 'Chaleur'                  },
-  { id: 'tulip-orange',    name: 'Tulipe Orange',      price: 2.50, image: tulipeOrange,     category: 'Tulipe',     meaning: 'Énergie'                  },
-  { id: 'lily-white',      name: 'Lys Blanc',          price: 4.00, image: lysWhite,         category: 'Lys',        meaning: 'Pureté divine'            },
-  { id: 'lily-pink',       name: 'Lys Rose',           price: 4.00, image: lysPink,          category: 'Lys',        meaning: 'Prospérité'               },
-  { id: 'renoncule-pink',  name: 'Renoncule Rose',     price: 3.00, image: renonculeRose,    category: 'Renoncule',  meaning: 'Charme'                   },
-  { id: 'renoncule-red',   name: 'Renoncule Rouge',    price: 3.00, image: renonculeRouge,   category: 'Renoncule',  meaning: 'Attraction'               },
-  { id: 'renoncule-white', name: 'Renoncule Blanche',  price: 3.00, image: renonculeBlanche, category: 'Renoncule',  meaning: 'Pureté'                   },
-  { id: 'renoncule-salmon',name: 'Renoncule Saumon',   price: 3.00, image: renonculeSaumon,  category: 'Renoncule',  meaning: 'Tendresse'                },
-  { id: 'dahlia-pink',     name: 'Dahlia Rose',        price: 4.50, image: dahliaPink,       category: 'Dahlia',     meaning: 'Élégance'                 },
-  { id: 'dahlia-yellow',   name: 'Dahlia Jaune',       price: 4.50, image: dahliaJaune,      category: 'Dahlia',     meaning: 'Joie pure'                },
-  { id: 'dahlia-fushia',   name: 'Dahlia Fushia',      price: 4.50, image: dahliaFushia,     category: 'Dahlia',     meaning: 'Vitalité'                 },
-  { id: 'dahlia-salmon',   name: 'Dahlia Saumon',      price: 4.50, image: dahliaSaumon,     category: 'Dahlia',     meaning: 'Raffinement'              },
-  { id: 'dahlia-white',    name: 'Dahlia Blanc',       price: 4.50, image: dahliaWhite,      category: 'Dahlia',     meaning: 'Dignité'                  },
-  { id: 'dahlia-blue',     name: 'Dahlia Bleu',        price: 4.50, image: dahliaBlue,       category: 'Dahlia',     meaning: 'Sérénité'                 },
-  { id: 'marguerite-white',name: 'Marguerite Blanche', price: 2.00, image: margueriteWhite,  category: 'Marguerite', meaning: 'Innocence'                },
-  { id: 'marguerite-pink', name: 'Marguerite Rose',    price: 2.00, image: margueritePink,   category: 'Marguerite', meaning: 'Gaieté'                   },
-  { id: 'marguerite-orange',name:'Marguerite Orange',  price: 2.00, image: margueriteOrange, category: 'Marguerite', meaning: 'Enthousiasme'             },
-  { id: 'hortensia-blue',  name: 'Hortensia Bleu',     price: 5.50, image: hortensiaBlue,    category: 'Hortensia',  meaning: 'Sincérité'                },
-  { id: 'hortensia-pink',  name: 'Hortensia Rose',     price: 5.50, image: hortensiaPink,    category: 'Hortensia',  meaning: 'Romance'                  },
-  { id: 'hortensia-purple',name: 'Hortensia Violet',   price: 5.50, image: hortensiaPurple,  category: 'Hortensia',  meaning: 'Profondeur'               },
-  { id: 'hortensia-white', name: 'Hortensia Blanc',    price: 5.50, image: hortensiaWhite,   category: 'Hortensia',  meaning: 'Grâce'                    },
-  { id: 'oeillet-pink',    name: 'Œillet Rose',        price: 2.50, image: oeillet,          category: 'Œillet',     meaning: 'Gratitude'                },
-  { id: 'oeillet-blue',    name: 'Œillet Bleu',        price: 2.50, image: oeilletBlue,      category: 'Œillet',     meaning: 'Fidélité'                 },
-  { id: 'oeillet-salmon',  name: 'Œillet Saumon',      price: 2.50, image: oeilletSaumon,    category: 'Œillet',     meaning: 'Admiration'               },
-  { id: 'oeillet-white',   name: 'Œillet Blanc',       price: 2.50, image: oeilletWhite,     category: 'Œillet',     meaning: 'Amour pur'                },
-];
-
-const SECONDARY_FLOWERS = [
-  { id: 'eucalyptus',       name: 'Eucalyptus',        price: 2.00, image: feuillageEucalyptus },
-  { id: 'gypsophile-white', name: 'Gypsophile Blanc',  price: 1.50, image: gypsophileWhite     },
-  { id: 'gypsophile-pink',  name: 'Gypsophile Rose',   price: 1.50, image: gypsophilePink      },
-  { id: 'gypsophile-blue',  name: 'Gypsophile Bleu',   price: 1.50, image: gypsophileBlue      },
-  { id: 'gypsophile-yellow',name: 'Gypsophile Jaune',  price: 1.50, image: gypsophileYellow    },
-  { id: 'fougere',          name: 'Fougère',           price: 1.80, image: feuillageFougere    },
-  { id: 'ruscus',           name: 'Ruscus',            price: 2.20, image: feuillageRuscus     },
-  { id: 'astilbe-pink',     name: 'Astilbe Rose',      price: 2.50, image: astilbePink         },
-  { id: 'astilbe-red',      name: 'Astilbe Rouge',     price: 2.50, image: astilbeRed          },
-  { id: 'astilbe-salmon',   name: 'Astilbe Saumon',    price: 2.50, image: astilbeSaumon       },
 ];
 
 const RIBBONS = [
@@ -145,13 +27,6 @@ const RIBBONS = [
   { id: 'multicolor', name: 'Multicolore', color: 'linear-gradient(90deg,#FF6B6B,#FFD93D,#6BCF7F,#4D96FF)' },
 ];
 
-// Fleurs regroupées par catégorie — calculé une seule fois au chargement du module
-const FLOWERS_BY_CATEGORY = ALL_FLOWERS.reduce((acc, flower) => {
-  if (!acc[flower.category]) acc[flower.category] = [];
-  acc[flower.category].push(flower);
-  return acc;
-}, {});
-
 const STEPS = [
   { num: 1, label: 'Occasion'     },
   { num: 2, label: 'Fleurs'       },
@@ -159,30 +34,69 @@ const STEPS = [
   { num: 4, label: 'Finalisation' },
 ];
 
-// ─── Helper : classe CSS de layout selon le nombre de fleurs dans l'aperçu ───
 function previewLayoutClass(count) {
   if (count === 1) return 'preview-layout-single';
   if (count <= 3)  return 'preview-layout-row';
   return 'preview-layout-grid';
 }
 
-// ─── Composant principal ──────────────────────────────────────────────────────
+// Transforme une fleur venant de l'API vers la forme utilisée par l'UI
+// (nom affiché = famille + couleur, catégorie = famille pour les onglets)
+function mapFlower(f) {
+  return {
+    id: f.id,
+    name: f.name.trim().toLocaleLowerCase('fr-FR') === f.color.trim().toLocaleLowerCase('fr-FR')
+      ? f.name
+      : `${f.name} ${f.color}`,
+    price: f.price,
+    image: f.imageUrl,
+    category: f.name,
+    meaning: f.description,
+  };
+}
 
 export default function CustomBouquet() {
   const navigate    = useNavigate();
   const { addToCart } = useCart();
 
+  const [allFlowers, setAllFlowers] = useState([]);
+  const [flowersLoading, setFlowersLoading] = useState(true);
+  const [flowersError, setFlowersError] = useState('');
+
   const [currentStep,    setCurrentStep]    = useState(1);
-  // maxReachedStep : empêche de sauter en avant via la barre de progression
   const [maxReachedStep, setMaxReachedStep] = useState(1);
 
   const [bouquetConfig, setBouquetConfig] = useState({
     occasion:        '',
-    selectedFlowers: [],   // { ...flower, quantity }
-    secondaryFlowers:[],   // string[] d'IDs
-    ribbonColor:     '',   // '' = pas encore choisi → ruban invisible
+    selectedFlowers: [],
+    secondaryFlowers:[],
+    ribbonColor:     '',
     message:         '',
   });
+
+  useEffect(() => {
+    flowersApi
+      .list()
+      .then(setAllFlowers)
+      .catch((err) => setFlowersError(err.message))
+      .finally(() => setFlowersLoading(false));
+  }, []);
+
+  const mainFlowersRaw      = useMemo(() => allFlowers.filter((f) => !f.isSecondary), [allFlowers]);
+  const secondaryFlowersRaw = useMemo(() => allFlowers.filter((f) => f.isSecondary), [allFlowers]);
+
+  const mainFlowers      = useMemo(() => mainFlowersRaw.map(mapFlower), [mainFlowersRaw]);
+  const secondaryFlowers = useMemo(() => secondaryFlowersRaw.map(mapFlower), [secondaryFlowersRaw]);
+
+  const FLOWERS_BY_CATEGORY = useMemo(
+    () =>
+      mainFlowers.reduce((acc, flower) => {
+        if (!acc[flower.category]) acc[flower.category] = [];
+        acc[flower.category].push(flower);
+        return acc;
+      }, {}),
+    [mainFlowers],
+  );
 
   // ── Dérivés ────────────────────────────────────────────────────────────────
 
@@ -190,8 +104,8 @@ export default function CustomBouquet() {
     let p = 0;
     bouquetConfig.selectedFlowers.forEach(f  => { p += f.price * f.quantity; });
     bouquetConfig.secondaryFlowers.forEach(id => {
-      const sf = SECONDARY_FLOWERS.find(f => f.id === id);
-      if (sf) p += sf.price * 5;
+      const sf = secondaryFlowers.find(f => f.id === id);
+      if (sf) p += sf.price;
     });
     return p;
   };
@@ -243,7 +157,6 @@ export default function CustomBouquet() {
     if (currentStep > 1) setCurrentStep(prev => prev - 1);
   };
 
-  // Clic sur la barre de progression : retour libre, avance bloquée
   const handleStepClick = (num) => {
     if (num <= maxReachedStep) setCurrentStep(num);
   };
@@ -265,10 +178,25 @@ export default function CustomBouquet() {
 
   // ── Rendu ──────────────────────────────────────────────────────────────────
 
+  if (flowersLoading) {
+    return (
+      <div className="custom-bouquet">
+        <div className="container"><p>Chargement des fleurs…</p></div>
+      </div>
+    );
+  }
+
+  if (flowersError) {
+    return (
+      <div className="custom-bouquet">
+        <div className="container"><p className="auth-error">{flowersError}</p></div>
+      </div>
+    );
+  }
+
   return (
     <div className="custom-bouquet">
 
-      {/* HEADER */}
       <div className="custom-header">
         <div className="container">
           <h1>Créez votre bouquet sur mesure</h1>
@@ -276,7 +204,6 @@ export default function CustomBouquet() {
         </div>
       </div>
 
-      {/* BARRE DE PROGRESSION */}
       <div className="progress-section">
         <div className="container">
           <div className="progress-steps">
@@ -284,7 +211,7 @@ export default function CustomBouquet() {
               const isCompleted = currentStep > step.num;
               const isActive    = currentStep >= step.num;
               const isCurrent   = currentStep === step.num;
-              const isClickable = step.num <= maxReachedStep; // retour = OK, avance = bloqué
+              const isClickable = step.num <= maxReachedStep;
 
               return (
                 <button
@@ -310,15 +237,12 @@ export default function CustomBouquet() {
         </div>
       </div>
 
-      {/* CONTENU PRINCIPAL */}
       <div className="custom-main">
         <div className="container">
           <div className="custom-layout">
 
-            {/* PANNEAU GAUCHE */}
             <div className="config-panel">
 
-              {/* ÉTAPE 1 — Occasion */}
               {currentStep === 1 && (
                 <div className="step-content">
                   <h2>Pour quelle occasion ?</h2>
@@ -338,7 +262,6 @@ export default function CustomBouquet() {
                 </div>
               )}
 
-              {/* ÉTAPE 2 — Sélection des fleurs (onglets + scroll) */}
               {currentStep === 2 && (
                 <Step2Flowers
                   flowersByCategory={FLOWERS_BY_CATEGORY}
@@ -349,13 +272,15 @@ export default function CustomBouquet() {
                 />
               )}
 
-              {/* ÉTAPE 3 — Compléments */}
               {currentStep === 3 && (
                 <div className="step-content">
                   <h2>Ajoutez des touches florales</h2>
                   <p className="step-subtitle">Feuillages et fleurs secondaires (optionnel)</p>
+                  {secondaryFlowers.length === 0 && (
+                    <p>Aucun complément disponible pour le moment. Vous pouvez passer à l'étape suivante.</p>
+                  )}
                   <div className="options-grid secondary-grid">
-                    {SECONDARY_FLOWERS.map(flower => (
+                    {secondaryFlowers.map(flower => (
                       <button
                         key={flower.id}
                         className={`option-card secondary-card ${bouquetConfig.secondaryFlowers.includes(flower.id) ? 'selected' : ''}`}
@@ -371,7 +296,7 @@ export default function CustomBouquet() {
                         <img src={flower.image} alt={flower.name} className="secondary-img" />
                         <div className="option-info">
                           <span className="option-name">{flower.name}</span>
-                          <span className="option-price">+{flower.price.toFixed(2)} €</span>
+                          <span className="option-price">+{flower.price.toFixed(2)} € / tige</span>
                         </div>
                       </button>
                     ))}
@@ -379,7 +304,6 @@ export default function CustomBouquet() {
                 </div>
               )}
 
-              {/* ÉTAPE 4 — Finalisation */}
               {currentStep === 4 && (
                 <div className="step-content">
                   <h2>Derniers détails</h2>
@@ -420,7 +344,6 @@ export default function CustomBouquet() {
                 </div>
               )}
 
-              {/* NAVIGATION */}
               <div className="step-navigation">
                 <button
                   onClick={handlePrevious}
@@ -447,7 +370,6 @@ export default function CustomBouquet() {
 
             </div>
 
-            {/* PANNEAU DROIT — APERÇU */}
             <aside className="preview-panel">
               <div className="preview-sticky">
                 <h3>Aperçu de votre bouquet</h3>
@@ -456,12 +378,6 @@ export default function CustomBouquet() {
                   <div className="preview-visual">
                     {bouquetConfig.selectedFlowers.length > 0 ? (
                       <>
-                        {/*
-                          FIX positionnement :
-                          - 1 fleur  → centrée seule
-                          - 2–3      → rangée centrée horizontalement
-                          - 4+       → grille auto-fill équilibrée
-                        */}
                         <div className={`preview-flowers-wrap ${previewLayoutClass(bouquetConfig.selectedFlowers.length)}`}>
                           {bouquetConfig.selectedFlowers.map((flower, i) => (
                             <img
@@ -474,7 +390,6 @@ export default function CustomBouquet() {
                           ))}
                         </div>
 
-                        {/* Ruban — uniquement si sélectionné */}
                         {bouquetConfig.ribbonColor && selectedRibbon && (
                           <div className="preview-ribbon-container">
                             <div
@@ -495,7 +410,6 @@ export default function CustomBouquet() {
                   </div>
                 </div>
 
-                {/* RÉSUMÉ */}
                 <div className="bouquet-summary">
                   <h4>Votre composition</h4>
                   <ul>
@@ -511,7 +425,7 @@ export default function CustomBouquet() {
                     {bouquetConfig.secondaryFlowers.length > 0 && (
                       <li>
                         <strong>Compléments :</strong>{' '}
-                        {bouquetConfig.secondaryFlowers.map(id => SECONDARY_FLOWERS.find(f => f.id === id)?.name).join(', ')}
+                        {bouquetConfig.secondaryFlowers.map(id => secondaryFlowers.find(f => f.id === id)?.name).join(', ')}
                       </li>
                     )}
                     {selectedRibbon && (
@@ -520,7 +434,6 @@ export default function CustomBouquet() {
                   </ul>
                 </div>
 
-                {/* PRIX */}
                 {bouquetConfig.selectedFlowers.length > 0 && (
                   <div className="preview-price">
                     <span>Prix total</span>
@@ -550,7 +463,6 @@ function Step2Flowers({ flowersByCategory, selectedFlowers, onAdd, onRemove, onU
       <h2>Composez votre bouquet</h2>
       <p className="step-subtitle">Naviguez par famille de fleurs et ajustez les quantités</p>
 
-      {/* ── ONGLETS CATÉGORIES ── */}
       <div className="category-tabs" role="tablist">
         {categories.map(cat => {
           const qty = selectedFlowers
@@ -572,7 +484,6 @@ function Step2Flowers({ flowersByCategory, selectedFlowers, onAdd, onRemove, onU
         })}
       </div>
 
-      {/* ── LISTE SCROLLABLE ── */}
       <div className="flowers-scroll-area" role="tabpanel">
         {flowers.map(flower => {
           const selected = selectedFlowers.find(f => f.id === flower.id);
@@ -601,7 +512,6 @@ function Step2Flowers({ flowersByCategory, selectedFlowers, onAdd, onRemove, onU
         })}
       </div>
 
-      {/* ── RÉCAP CHIPS sélection courante ── */}
       {selectedFlowers.length > 0 && (
         <div className="selection-recap">
           <span className="recap-label">Ma sélection</span>

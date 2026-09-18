@@ -21,6 +21,8 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 import AdminDashboard from './pages/AdminDashboard';
+import ChatWidget from './components/ChatWidget';
+
 
 export default function App() {
   return (
@@ -30,7 +32,7 @@ export default function App() {
           <CartProvider>
             <BrowserRouter basename={import.meta.env.BASE_URL}>
               <Navbar />
-
+              <ChatWidget /> {/* Le widget est chargé une fois et reste actif sur toutes les pages */}
               <main>
                 <Routes>
                   <Route path="/" element={<Home />} />
@@ -41,30 +43,12 @@ export default function App() {
                   <Route path="/blog/:id" element={<BlogArticle />} />
                   <Route path="/communaute" element={<Community />} />
                   <Route path="/compte" element={<Account />} />
-                  <Route
-                    path="/personnaliser"
-                    element={<CustomBouquet />}
-                  />
-                  <Route
-                    path="/commande/succes"
-                    element={<OrderSuccess />}
-                  />
-                  <Route
-                    path="/mot-de-passe-oublie"
-                    element={<ForgotPassword />}
-                  />
-                  <Route
-                    path="/reinitialiser-mot-de-passe"
-                    element={<ResetPassword />}
-                  />
-                  <Route
-                    path="/verification-email"
-                    element={<VerifyEmail />}
-                  />
-                  <Route
-                    path="/admin"
-                    element={<AdminDashboard />}
-                  />
+                  <Route path="/personnaliser" element={<CustomBouquet />} />
+                  <Route path="/commande/succes" element={<OrderSuccess />} />
+                  <Route path="/mot-de-passe-oublie" element={<ForgotPassword />} />
+                  <Route path="/reinitialiser-mot-de-passe" element={<ResetPassword />} />
+                  <Route path="/verification-email" element={<VerifyEmail />} />
+                  <Route path="/admin" element={<AdminDashboard />} />
                 </Routes>
               </main>
 

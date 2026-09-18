@@ -127,6 +127,10 @@ export const productsApi = {
     request(`/products/${id}`),
 };
 
+export const flowersApi = {
+  list: () => request('/flowers'),
+};
+
 export const favoritesApi = {
   list: (token) =>
     request('/favorites', {
@@ -281,4 +285,10 @@ export const commentsApi = {
       method: 'DELETE',
       token,
     }),
+};
+
+// Frontend — ajout chatbotApi
+export const chatbotApi = {
+  sendMessage: (message, history) =>
+    request('/chatbot/message', { method: 'POST', body: { message, history } }),
 };
