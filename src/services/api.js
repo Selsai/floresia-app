@@ -151,6 +151,7 @@ export const favoritesApi = {
 };
 
 export const ordersApi = {
+  getOne: (id, token) => request('/orders/' + encodeURIComponent(id), { token }),
   list: (token) =>
     request('/orders', {
       token,
