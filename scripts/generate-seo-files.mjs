@@ -1,0 +1,23 @@
+﻿import { writeFile } from 'node:fs/promises';
+import { resolve } from 'node:path';
+import { loadEnv } from 'vite';
+
+const env = loadEnv('production', process.cwd(), 'VITE_');
+const site = env.VITE_SITE_URL?.replace(/\/+$/, '');
+if (!site) {
+  console.log('SEO: VITE_SITE_URL absent; no public sitemap or robots.txt generated.');
+  process.exit(0);
+}
+const url = new URL(site);
+if (url.protocol !== 'https:' || url.pathname !== '/' || url.search || url.hash) {
+  throw new Error('VITE_SITE_URL must be an HTTPS origin, for example https://floresia.fr');
+}
+const base = (env.VITE_BASE_PATH || '/floresia-app/').replace(/^\/+|\/+$/g, '');
+const routes = ['/', '/boutique', '/personnaliser', '/blog', '/communaute', '/contact', '/mentions-legales', '/cgv', '/confidentialite', '/cookies'];
+const publicUrl = (route) => site + (base ? '/' + base : '') + route;
+const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+  + routes.map(route => `  <url><loc>${publicUrl(route)}</loc></url>`).join('\n')
+  + '\n</urlset>\n';
+await writeFile(resolve('dist/sitemap.xml'), sitemap, 'utf8');
+await writeFile(resolve('dist/robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${publicUrl('/sitemap.xml')}\n`, 'utf8');
+console.log(`SEO: sitemap.xml and robots.txt generated for ${site}.`);

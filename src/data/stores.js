@@ -1,3 +1,4 @@
+// stores : donnees locales.
 export const STORES = [
   {
     id: 'store-1',

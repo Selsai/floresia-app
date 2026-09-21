@@ -1,0 +1,75 @@
+.admin-dashboard { min-height: 100vh; background: var(--beige); padding: 60px 0; }
+
+.admin-tabs { display: flex; gap: 12px; margin: 24px 0 32px; }
+
+.admin-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 2px solid var(--border);
+  background: var(--white);
+  color: var(--text-mid);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-tabs button.active { background: var(--pink); border-color: var(--pink); color: var(--white); }
+
+.admin-list { display: flex; flex-direction: column; gap: 12px; }
+
+.admin-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  background: var(--white);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.admin-row-meta { color: var(--text-light); font-size: 13px; }
+
+.admin-row p { margin-top: 6px; font-size: 14px; }
+
+.admin-thumb { max-height: 60px; border-radius: 8px; margin-top: 8px; }
+
+.admin-row-photo { display: flex; align-items: center; gap: 12px; }
+
+.admin-row button {
+  background: none;
+  border: none;
+  color: var(--color-d9534f);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.admin-dashboard { padding: clamp(44px, 6vw, 88px) 0 110px; background: linear-gradient(180deg, var(--color-fff5f7), var(--color-fffdfa) 45%); }
+.admin-dashboard .container { max-width: 1100px; }
+.admin-eyebrow { margin-bottom: 12px; color: var(--pink-dark); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.admin-dashboard h1 { max-width: 850px; font: 700 clamp(34px, 5vw, 58px)/1.08 'Playfair Display', Georgia, serif; color: var(--color-432c36); }
+.admin-intro { max-width: 620px; margin: 16px 0 32px; color: var(--text-mid); line-height: 1.7; }
+.admin-error { padding: 18px 20px; margin-bottom: 22px; border: 1px solid var(--color-d57983); border-radius: 14px; background: var(--color-fff2f3); color: var(--color-922b3e); }
+.admin-tabs { gap: 10px; overflow-x: auto; padding: 4px 0 18px; margin: 0 0 20px; }
+.admin-tabs button { gap: 10px; flex: none; min-height: 46px; padding: 10px 18px; border-width: 1px; background: var(--white); color: var(--color-654954); font-size: 14px; }
+.admin-tabs button:hover { transform: translateY(-2px); border-color: var(--pink); }
+.admin-tabs button.active { background: var(--pink-dark); border-color: var(--pink-dark); }
+.admin-tabs svg { width: 17px; height: 17px; }
+.admin-tab-count { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 5px; border-radius: 50%; background: var(--color-f7e7ed); color: var(--pink-dark); font-size: 11px; }
+.admin-tabs button.active .admin-tab-count { background: var(--white); }
+.admin-list { gap: 14px; }
+.admin-list > p { padding: 38px; border: 1px solid var(--color-ebd6df); border-radius: 20px; background: var(--white); text-align: center; color: var(--text-mid); }
+.admin-row { min-width: 0; padding: clamp(20px, 3vw, 28px); border-width: 1px; border-radius: 20px; box-shadow: 0 15px 38px var(--alpha-0c8e2357); }
+.admin-row > div { min-width: 0; overflow-wrap: anywhere; }
+.admin-row strong { color: var(--color-432c36); font-size: 16px; }
+.admin-row p { margin-top: 10px; line-height: 1.6; }
+.admin-thumb { width: 76px; height: 76px; object-fit: cover; border-radius: 12px; }
+.admin-row button { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--color-f0cbd3); border-radius: 50%; background: var(--color-fff8f8); color: var(--color-a83950); }
+.admin-row button:hover { background: var(--color-ffe8e9); }
+.admin-loading { display: grid; gap: 14px; }
+.admin-loading span { display: block; height: 104px; border-radius: 20px; background: linear-gradient(100deg,var(--color-f5e7eb) 25%,var(--white) 45%,var(--color-f5e7eb) 65%); background-size: 200% 100%; animation: admin-shimmer 1.5s ease-in-out infinite; }
+@keyframes admin-shimmer { to { background-position-x: -200%; } }
+@media (max-width: 640px) { .admin-dashboard { padding-top: 42px; } .admin-row { padding: 18px; } .admin-row-photo { align-items: flex-start; } .admin-row-photo .admin-thumb { width: 58px; height: 58px; } }
+@media (prefers-reduced-motion: reduce) { .admin-tabs button, .admin-loading span { animation: none; transition: none; } }
