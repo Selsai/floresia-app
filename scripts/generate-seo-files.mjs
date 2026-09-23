@@ -12,7 +12,7 @@ const url = new URL(site);
 if (url.protocol !== 'https:' || url.pathname !== '/' || url.search || url.hash) {
   throw new Error('VITE_SITE_URL must be an HTTPS origin, for example https://floresia.fr');
 }
-const base = (env.VITE_BASE_PATH || '/floresia-app/').replace(/^\/+|\/+$/g, '');
+const base = (env.VITE_BASE_PATH || '/').replace(/^\/+|\/+$/g, '');
 const routes = ['/', '/boutique', '/personnaliser', '/blog', '/communaute', '/contact', '/mentions-legales', '/cgv', '/confidentialite', '/cookies'];
 const publicUrl = (route) => site + (base ? '/' + base : '') + route;
 const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

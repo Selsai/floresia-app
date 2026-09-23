@@ -39,3 +39,9 @@
   from { opacity: 0; transform: translate(-50%, 20px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
+
+@media (max-width: 520px) {
+  .toast { bottom: max(18px, env(safe-area-inset-bottom)); width: calc(100% - 32px); max-width: none; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 16px; }
+  .toast > span { min-width: 0; overflow-wrap: anywhere; }
+  .toast-action { flex: none; padding-inline: 12px; }
+}

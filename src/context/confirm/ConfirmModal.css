@@ -104,3 +104,8 @@
 .confirm-confirm.danger:hover {
   background: var(--color-c9302c);
 }
+
+@media (max-width: 520px) {
+  .confirm-overlay { padding: 16px; }
+  .confirm-modal { width: 100%; padding: 26px 20px; }
+}

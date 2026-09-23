@@ -1,10 +1,11 @@
 // OrderSuccess : confirmation de commande.
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { CircleCheck as FiCheckCircle } from 'lucide-react';
+import { ArrowRight, CircleCheck as FiCheckCircle, Clock3, ReceiptText } from 'lucide-react';
 import { useAuth } from '../../context/auth/auth-context';
 import { useCart } from '../../context/cart/cart-context';
 import { ordersApi } from '../../services/api';
+import './OrderSuccess.css';
 
 export default function OrderSuccess() {
   const [searchParams] = useSearchParams();
@@ -54,12 +55,26 @@ export default function OrderSuccess() {
   else if (current) message = 'La confirmation du paiement est encore en attente. Vous pouvez consulter votre compte.';
 
   return (
-    <div className="container" style={{ textAlign: 'center', padding: '4rem 1rem' }}>
-      {paid && <FiCheckCircle size={64} color="var(--green)" aria-hidden="true" />}
-      <h1>{paid ? 'Merci pour votre commande !' : 'Suivi de votre paiement'}</h1>
-      <p role="status">{message}</p>
-      {current && !current.error && <p>Numéro de commande : <strong>{orderId}</strong></p>}
-      <Link to="/compte" className="btn-continue-shopping">Consulter mon compte</Link>
-    </div>
+    <main className="order-success-page">
+      <section className={`order-success-card ${paid ? 'is-paid' : ''}`}>
+        <div className="order-success-icon" aria-hidden="true">
+          {paid ? <FiCheckCircle /> : <Clock3 />}
+        </div>
+        <p className="order-success-eyebrow">Florésia · suivi de commande</p>
+        <h1>{paid ? 'Merci pour votre commande !' : 'Suivi de votre paiement'}</h1>
+        <p className="order-success-message" role="status">{message}</p>
+        {current && !current.error && (
+          <div className="order-success-reference">
+            <ReceiptText aria-hidden="true" />
+            <span>Commande</span>
+            <strong>#{orderId}</strong>
+          </div>
+        )}
+        <p className="order-success-help">Retrouvez le détail et l’avancement de votre commande dans votre espace personnel.</p>
+        <Link to="/compte" className="order-success-action">
+          Voir mes commandes <ArrowRight aria-hidden="true" />
+        </Link>
+      </section>
+    </main>
   );
 }

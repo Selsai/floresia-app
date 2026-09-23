@@ -215,7 +215,10 @@
   border-width: 3px;
 }
 
-.option-icon { font-size: 36px; }
+.option-icon { display: grid; place-items: center; font-size: 36px; color: var(--green); }
+.option-icon svg { color: inherit; stroke: currentColor; }
+.option-card:hover .option-icon,
+.option-card.selected .option-icon { color: var(--green-dark); }
 
 .option-name {
   font-size: 16px;
@@ -886,4 +889,13 @@
 
   .step-navigation   { flex-direction: column; }
   .btn-nav           { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 520px) {
+  .progress-section { padding: 24px 0; }
+  .progress-steps { gap: 3px; }
+  .step-number { width: 36px; height: 36px; font-size: 13px; }
+  .progress-steps::before { top: 18px; }
+  .step-label { width: 58px; white-space: normal; font-size: 10px; line-height: 1.2; text-align: center; overflow-wrap: anywhere; }
+  .config-panel { padding-inline: 18px; }
 }

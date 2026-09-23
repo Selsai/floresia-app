@@ -61,7 +61,7 @@ export function LegalNoticePage() {
       </section>
       <section>
         <h2>Hébergement</h2>
-        <p>Domaine prévu : floresia.fr, réservé auprès de Hostinger. Hébergement public prévu chez {hostName} ; les coordonnées techniques seront confirmées à la mise en ligne.</p>
+        <p>Le site <strong>floresia.fr</strong> et ses fichiers statiques sont hébergés par {hostName}. L’API NestJS est hébergée par Render et accessible depuis le sous-domaine sécurisé <strong>api.floresia.fr</strong>. La base de données PostgreSQL est hébergée par Supabase.</p>
         {hostContact && <p>Coordonnées de l’hébergeur : {hostContact}.</p>}
 
       </section>
@@ -69,7 +69,7 @@ export function LegalNoticePage() {
         <h2>Contenus et responsabilité</h2>
         <p>Les photographies, textes et éléments graphiques sont présentés dans le cadre du projet Florésia. Leur réutilisation nécessite l’autorisation de leurs titulaires. Les conseils de Flora restent indicatifs ; ils ne remplacent pas un avis professionnel adapté à votre situation.</p>
       </section>
-      <p><Link to="/contact">Contacter la responsable du projet</Link></p>
+      <p className="information-page__footer-link"><Link to="/contact"><Mail size={18} aria-hidden="true" />Contacter la responsable du projet<ArrowUpRight size={17} aria-hidden="true" /></Link></p>
     </InformationPage>
   );
 }

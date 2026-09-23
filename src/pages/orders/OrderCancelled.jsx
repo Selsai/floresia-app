@@ -1,14 +1,19 @@
 // OrderCancelled : annulation de paiement.
 import { Link } from 'react-router-dom';
-import { ShoppingBag as FiShoppingBag } from 'lucide-react';
+import { ArrowLeft, ShoppingBag as FiShoppingBag } from 'lucide-react';
+import './OrderSuccess.css';
 
 export default function OrderCancelled() {
   return (
-    <div className="container" style={{ textAlign: 'center', padding: '4rem 1rem' }}>
-      <FiShoppingBag size={48} aria-hidden="true" />
-      <h1>Paiement interrompu</h1>
-      <p>Votre panier est conservé. Vous pouvez reprendre votre commande lorsque vous le souhaitez.</p>
-      <Link to="/panier" className="btn-continue-shopping">Revenir au panier</Link>
-    </div>
+    <main className="order-success-page">
+      <section className="order-success-card">
+        <div className="order-success-icon" aria-hidden="true"><FiShoppingBag /></div>
+        <p className="order-success-eyebrow">Florésia · votre panier vous attend</p>
+        <h1>Paiement interrompu</h1>
+        <p className="order-success-message">Aucun paiement n’a été enregistré. Votre sélection est conservée et vous pourrez reprendre votre commande lorsque vous le souhaitez.</p>
+        <p className="order-success-help">Vous pouvez modifier les quantités ou choisir un autre mode de livraison avant de réessayer.</p>
+        <Link to="/panier" className="order-success-action"><ArrowLeft aria-hidden="true" /> Revenir au panier</Link>
+      </section>
+    </main>
   );
 }

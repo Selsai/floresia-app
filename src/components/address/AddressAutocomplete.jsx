@@ -1,5 +1,5 @@
 // AddressAutocomplete : suggestions et validation des adresses.
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 
 const PARIS_ZIP_REGEX = /^750(0[1-9]|1[0-9]|20)$/;
 
@@ -7,20 +7,6 @@ export default function AddressAutocomplete({ onSelect, onClear, initialValue = 
   const [query, setQuery] = useState(initialValue);
   const [suggestions, setSuggestions] = useState([]);
   const [outOfZoneMessage, setOutOfZoneMessage] = useState('');
-  const [coords, setCoords] = useState(null);
-
-  const wrapperRef = useRef(null);
-
-  const updateCoords = () => {
-    if (wrapperRef.current) {
-      const rect = wrapperRef.current.getBoundingClientRect();
-      setCoords({
-        top: rect.bottom + 6,
-        left: rect.left,
-        width: rect.width,
-      });
-    }
-  };
 
   const handleChange = async (e) => {
     const value = e.target.value;
@@ -40,7 +26,6 @@ export default function AddressAutocomplete({ onSelect, onClear, initialValue = 
       const data = await res.json();
       const features = Array.isArray(data?.features) ? data.features : [];
       setSuggestions(features);
-      if (features.length > 0) updateCoords();
     } catch (err) {
       console.error('Erreur autocomplete adresse :', err);
       setSuggestions([]);
@@ -76,16 +61,8 @@ export default function AddressAutocomplete({ onSelect, onClear, initialValue = 
     });
   };
 
-  // Recalcule la position si le formulaire scrolle pendant que le dropdown est ouvert
-  useEffect(() => {
-    if (suggestions.length === 0) return;
-    const handleScroll = () => updateCoords();
-    window.addEventListener('scroll', handleScroll, true);
-    return () => window.removeEventListener('scroll', handleScroll, true);
-  }, [suggestions.length]);
-
   return (
-    <div className="address-autocomplete" ref={wrapperRef}>
+    <div className="address-autocomplete">
       <input
         type="text"
         aria-label="Adresse à Paris"
@@ -94,16 +71,8 @@ export default function AddressAutocomplete({ onSelect, onClear, initialValue = 
         onChange={handleChange}
       />
 
-      {suggestions.length > 0 && coords && (
-        <ul
-          className="address-suggestions"
-          style={{
-            position: 'fixed',
-            top: coords.top,
-            left: coords.left,
-            width: coords.width,
-          }}
-        >
+      {suggestions.length > 0 && (
+        <ul className="address-suggestions">
           {suggestions.map((f) => (
             <li key={f.properties.id}>
               <button type="button" onClick={() => handleSelect(f)}>{f.properties.label}</button>

@@ -574,12 +574,10 @@ export default function BlogArticle() {
                     </Link>
                   </div>
                 ) : (
-                  <p className="login-to-comment">
-                    <Link to="/compte">
-                      Connectez-vous
-                    </Link>{' '}
-                    pour laisser un commentaire.
-                  </p>
+                  <div className="login-to-comment">
+                    <span>Connectez-vous pour laisser un commentaire.</span>
+                    <Link to="/compte">Se connecter →</Link>
+                  </div>
                 )}
               </div>
             </div>

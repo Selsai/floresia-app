@@ -4,9 +4,14 @@ import process from 'node:process'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
+
   return {
     plugins: [react()],
-    base: env.VITE_BASE_PATH || '/floresia-app/',
-    server: { watch: { ignored: ['**/.tmp/**', '**/coverage/**'] } },
+    base: env.VITE_BASE_PATH || '/',
+    server: {
+      watch: {
+        ignored: ['**/.tmp/**', '**/coverage/**'],
+      },
+    },
   }
 })

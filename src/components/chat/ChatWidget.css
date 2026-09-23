@@ -215,12 +215,12 @@
 }
 
 @media (max-width: 480px) {
-  .chat-bubble { right: 20px; bottom: 20px; width: 58px; height: 58px; }
+  .chat-bubble { right: 20px; bottom: max(20px, env(safe-area-inset-bottom)); width: 58px; height: 58px; }
   .chat-window {
-    right: 12px;
-    left: 12px;
+    right: 16px;
+    left: 16px;
     width: auto;
-    bottom: 88px;
+    bottom: max(88px, calc(env(safe-area-inset-bottom) + 76px));
     max-width: none;
     max-height: calc(100dvh - 108px);
     border-radius: 20px;
