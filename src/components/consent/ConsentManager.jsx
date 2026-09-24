@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ShieldCheck } from "lucide-react";
+import { Flower2, SlidersHorizontal } from "lucide-react";
 import "./ConsentManager.css";
 
 export const CONSENT_KEY = "floresia-consent-v1";
@@ -69,27 +69,16 @@ export default function ConsentManager() {
         aria-modal="true"
         aria-labelledby="consent-title"
       >
-        <div className="consent-heading">
-          <ShieldCheck aria-hidden="true" />
-          <div>
-            <span>Cookies</span>
-            <h2 id="consent-title">
-              Votre navigation reste simple et transparente
-            </h2>
-          </div>
-        </div>
-        <p>
-          Florésia utilise des stockages nécessaires à son fonctionnement. Avec
-          votre accord, une mesure d’audience nous aide à comprendre les pages
-          consultées. Consultez notre{" "}
-          <a href="/cookies">politique relative aux cookies</a>.
-        </p>
+        <div className="consent-brand" aria-hidden="true"><Flower2 /><span>Florésia</span><small>Vos choix, à votre rythme</small></div>
+        <div className="consent-content">
+        <div className="consent-heading"><span>Respect de votre vie privée</span><h2 id="consent-title">Choisissez ce que Florésia peut mesurer</h2></div>
+        <p>Le panier et la connexion ont besoin du stockage de votre navigateur. Les statistiques de visite restent, elles, entièrement facultatives. Vous pourrez changer d’avis depuis la <a href="/cookies">page Cookies</a>.</p>
         {customize && (
           <div className="consent-options">
             <label>
               <span>
-                <strong>Stockage nécessaire</strong>
-                <small>Connexion, panier, préférences et sécurité.</small>
+                <strong>Fonctions essentielles</strong>
+                <small>Garder votre panier et votre session disponibles.</small>
               </span>
               <input
                 type="checkbox"
@@ -100,10 +89,8 @@ export default function ConsentManager() {
             </label>
             <label>
               <span>
-                <strong>Mesure d’audience</strong>
-                <small>
-                  Statistiques de consultation, uniquement avec votre accord.
-                </small>
+                <strong>Statistiques anonymisées</strong>
+                <small>Comprendre les pages utiles pour améliorer le projet.</small>
               </span>
               <input
                 type="checkbox"
@@ -123,12 +110,13 @@ export default function ConsentManager() {
             </button>
           ) : (
             <button type="button" onClick={() => setCustomize(true)}>
-              Personnaliser
+              <SlidersHorizontal size={17} aria-hidden="true" /> Choisir en détail
             </button>
           )}
           <button type="button" className="primary" onClick={() => save(true)}>
             Tout accepter
           </button>
+        </div>
         </div>
       </section>
     </div>
