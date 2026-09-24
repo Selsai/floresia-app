@@ -108,7 +108,7 @@ export function PrivacyPage() {
       </section>
       <section>
         <h2>Services extérieurs</h2>
-        <p>Resend sert à envoyer les codes de vérification et les liens de récupération du compte. Stripe gère le paiement simulé. La recherche d’adresse interroge le service public api-adresse.data.gouv.fr après votre saisie. Le choix du retrait peut interroger Overpass avec des coordonnées proches de l’adresse sélectionnée et afficher des tuiles OpenStreetMap. Les liens vers les réseaux sociaux ne sont ouverts qu’après un clic.</p>
+        <p>Resend sert à envoyer les codes de vérification et les liens de récupération du compte. Stripe gère le paiement simulé. La recherche d’adresse interroge le service public api-adresse.data.gouv.fr après votre saisie. Le choix du retrait peut interroger Overpass avec des coordonnées proches de l’adresse sélectionnée et afficher des tuiles OpenStreetMap. Les polices sont chargées depuis Google Fonts à l’ouverture des pages. Les liens vers les réseaux sociaux ne sont ouverts qu’après un clic.</p>
       </section>
       <section>
         <h2>Stockage dans le navigateur</h2>

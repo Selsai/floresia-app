@@ -41,6 +41,21 @@ export default function PageMeta() {
     const descriptionTag = document.querySelector('meta[name="description"]');
     if (descriptionTag) descriptionTag.setAttribute('content', description);
 
+    const setMeta = (selector, attribute, value) => {
+      let tag = document.querySelector(selector);
+      if (!tag) {
+        tag = document.createElement('meta');
+        const [name, key] = attribute;
+        tag.setAttribute(name, key);
+        document.head.appendChild(tag);
+      }
+      tag.setAttribute('content', value);
+    };
+    setMeta('meta[property="og:title"]', ['property', 'og:title'], title);
+    setMeta('meta[property="og:description"]', ['property', 'og:description'], description);
+    setMeta('meta[name="twitter:title"]', ['name', 'twitter:title'], title);
+    setMeta('meta[name="twitter:description"]', ['name', 'twitter:description'], description);
+
     let robotsTag = document.querySelector('meta[name="robots"]');
     if (!robotsTag) {
       robotsTag = document.createElement('meta');
@@ -52,12 +67,13 @@ export default function PageMeta() {
     const canonicalTag = document.querySelector('link[rel="canonical"]');
     if (canonicalTag) canonicalTag.remove();
     const siteUrl = import.meta.env.VITE_SITE_URL?.replace(/\/+$/, '');
-    if (siteUrl && isPublicPage && pages[normalizedPath]) {
+    if (siteUrl && isPublicPage) {
       const canonical = document.createElement('link');
       canonical.rel = 'canonical';
       const base = import.meta.env.BASE_URL.replace(/^\/|\/$/g, '');
       canonical.href = siteUrl + (base ? '/' + base : '') + (normalizedPath === '/' ? '/' : normalizedPath);
       document.head.appendChild(canonical);
+      setMeta('meta[property="og:url"]', ['property', 'og:url'], canonical.href);
     }
   }, [pathname]);
 
