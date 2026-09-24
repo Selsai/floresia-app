@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Flower2, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
+import logoFloresia from "../../assets/brand/logo-floresia.png";
 import "./ConsentManager.css";
 
 export const CONSENT_KEY = "floresia-consent-v1";
@@ -69,10 +70,12 @@ export default function ConsentManager() {
         aria-modal="true"
         aria-labelledby="consent-title"
       >
-        <div className="consent-brand" aria-hidden="true"><Flower2 /><span>Florésia</span><small>Vos choix, à votre rythme</small></div>
+        <div className="consent-brand"><img src={logoFloresia} alt="" /><span>Florésia</span></div>
         <div className="consent-content">
-        <div className="consent-heading"><span>Respect de votre vie privée</span><h2 id="consent-title">Choisissez ce que Florésia peut mesurer</h2></div>
-        <p>Le panier et la connexion ont besoin du stockage de votre navigateur. Les statistiques de visite restent, elles, entièrement facultatives. Vous pourrez changer d’avis depuis la <a href="/cookies">page Cookies</a>.</p>
+        <div className="consent-heading"><span>Respect de votre vie privée</span><h2 id="consent-title">Gérez vos préférences de cookies</h2></div>
+        <p>Nous utilisons des technologies de stockage pour assurer le fonctionnement du site et, avec votre accord, mesurer son audience.</p>
+        <div className="consent-reasons"><strong>Voici pourquoi nous les utilisons :</strong><ul><li>mémoriser votre panier et maintenir votre session ;</li><li>comprendre l’utilisation du site afin d’améliorer l’expérience proposée.</li></ul></div>
+        <p className="consent-note">Vous pouvez accepter, refuser ou personnaliser votre choix, puis le modifier à tout moment depuis la <a href="/cookies">page Cookies</a>.</p>
         {customize && (
           <div className="consent-options">
             <label>
