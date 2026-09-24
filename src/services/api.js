@@ -16,11 +16,19 @@ async function request(path, { method = 'GET', body, token } = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${path}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  let response;
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      method,
+      headers,
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  } catch (error) {
+    const isNetworkFailure = error instanceof TypeError
+      || /failed to fetch|load failed|networkerror/i.test(error?.message || '');
+    if (!isNetworkFailure && error instanceof Error) throw error;
+    throw new Error('Impossible de joindre le service Florésia. Vérifiez votre connexion puis réessayez.');
+  }
 
   const data = await response.json().catch(() => null);
 

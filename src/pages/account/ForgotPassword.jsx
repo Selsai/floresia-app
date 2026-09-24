@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail as FiMail } from 'lucide-react';
 import { authApi } from '../../services/api';
+import RecoveryHeader from './RecoveryHeader';
 import './ForgotPassword.css';
 
 export default function ForgotPassword() {
@@ -29,20 +30,19 @@ export default function ForgotPassword() {
   return (
     <div className="forgot-password-page">
       <div className="forgot-password-card">
-        <h1>Mot de passe oublié</h1>
+        <RecoveryHeader eyebrow="Compte Florésia" title="Mot de passe oublié">
+          {!sent && <p className="fp-subtitle">Renseignez l’adresse email de votre compte pour recevoir un lien de réinitialisation sécurisé.</p>}
+        </RecoveryHeader>
 
         {!sent ? (
           <>
-            <p className="fp-subtitle">
-              Renseignez l'adresse email de votre compte pour recevoir un lien de réinitialisation sécurisé.
-            </p>
-
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label>Email</label>
+                <label htmlFor="forgot-email">Adresse email</label>
                 <div className="input-with-icon">
                   <FiMail />
                   <input
+                    id="forgot-email"
                     type="email"
                     placeholder="votre@email.com"
                     value={email}
@@ -73,7 +73,7 @@ export default function ForgotPassword() {
       </div>
 
       <footer className="fp-footer">
-        <span>© 2025 Florésia — Tous droits réservés</span>
+        <span>© 2026 Florésia — Projet pédagogique</span>
         <Link to="/mentions-legales">Mentions légales</Link>
         <Link to="/contact">Contact</Link>
       </footer>

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';
 import { Lock as FiLock, Eye as FiEye, EyeOff as FiEyeOff } from 'lucide-react';
 import { authApi } from '../../services/api';
+import RecoveryHeader from './RecoveryHeader';
 import './ForgotPassword.css';
 
 const PASSWORD_RULES = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{12,}$/;
@@ -15,6 +16,7 @@ export default function ResetPassword() {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -53,17 +55,20 @@ export default function ResetPassword() {
   return (
     <div className="forgot-password-page">
       <div className="forgot-password-card">
-        <h1>Nouveau mot de passe</h1>
+        <RecoveryHeader eyebrow="Sécurité du compte" title="Nouveau mot de passe">
+          {!success && <p className="fp-subtitle">Choisissez un mot de passe sécurisé pour retrouver l’accès à votre compte.</p>}
+        </RecoveryHeader>
 
         {success ? (
           <p className="fp-success">Mot de passe réinitialisé avec succès ! Redirection…</p>
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Nouveau mot de passe</label>
+              <label htmlFor="new-password">Nouveau mot de passe</label>
               <div className="input-with-icon">
                 <FiLock />
                 <input
+                  id="new-password"
                   type={showPassword ? 'text' : 'password'}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
@@ -73,6 +78,7 @@ export default function ResetPassword() {
                   type="button"
                   className="toggle-password"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Masquer le nouveau mot de passe' : 'Afficher le nouveau mot de passe'}
                 >
                   {showPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
@@ -80,15 +86,24 @@ export default function ResetPassword() {
             </div>
 
             <div className="form-group">
-              <label>Confirmer le mot de passe</label>
+              <label htmlFor="confirm-new-password">Confirmer le mot de passe</label>
               <div className="input-with-icon">
                 <FiLock />
                 <input
-                  type={showPassword ? 'text' : 'password'}
+                  id="confirm-new-password"
+                  type={showConfirmation ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
+                <button
+                  type="button"
+                  className="toggle-password"
+                  onClick={() => setShowConfirmation(!showConfirmation)}
+                  aria-label={showConfirmation ? 'Masquer la confirmation du mot de passe' : 'Afficher la confirmation du mot de passe'}
+                >
+                  {showConfirmation ? <FiEyeOff /> : <FiEye />}
+                </button>
               </div>
             </div>
 

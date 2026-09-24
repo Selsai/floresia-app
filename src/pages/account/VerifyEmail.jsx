@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { authApi } from '../../services/api';
+import RecoveryHeader from './RecoveryHeader';
 import './ForgotPassword.css';
 
 const CODE_DURATION = 10 * 60; // 10 minutes en secondes
@@ -71,12 +72,9 @@ export default function VerifyEmail() {
   return (
     <div className="forgot-password-page">
       <div className="forgot-password-card">
-        <h1>Vérifiez votre email</h1>
-
-        <p className="fp-subtitle">
-          Pour finaliser la création de votre compte, saisissez le code à 6 chiffres envoyé à{' '}
-          <strong>{email}</strong>.
-        </p>
+        <RecoveryHeader eyebrow="Validation du compte" title="Vérifiez votre email">
+          <p className="fp-subtitle">Pour finaliser votre compte, saisissez le code à 6 chiffres envoyé à <strong>{email}</strong>.</p>
+        </RecoveryHeader>
 
         {secondsLeft > 0 ? (
           <p className="fp-timer">
@@ -88,8 +86,9 @@ export default function VerifyEmail() {
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Code de vérification</label>
+            <label htmlFor="verification-code">Code de vérification</label>
             <input
+              id="verification-code"
               type="text"
               inputMode="numeric"
               maxLength={6}
