@@ -423,4 +423,22 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
   .toggle-password { right: 7px; }
   .form-row { grid-template-columns: 1fr; gap: 0; }
 }
+.account-page .auth-error,
+.account-page .field-error--prominent {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-f4b8b5);
+  border-radius: 12px;
+  background: var(--color-fef2f2);
+  color: var(--color-b42318);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  box-shadow: 0 8px 20px var(--alpha-814bbf59);
+}
+.account-page .auth-error::before { content: "⚠"; flex: none; }
+.account-page .field-error--prominent { margin-top: 8px; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }

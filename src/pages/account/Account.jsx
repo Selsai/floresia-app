@@ -71,6 +71,13 @@ export default function Account() {
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [termsError, setTermsError] = useState('');
 
+  const switchAuthMode = (signup) => {
+    setIsSignup(signup);
+    setAuthError('');
+    setSignupErrors({});
+    setTermsError('');
+  };
+
   const [loginData, setLoginData] = useState({
     email: getRememberedEmail(),
     password: '',
@@ -333,7 +340,11 @@ export default function Account() {
       updateUser(updated);
       setProfileSuccess('Profil mis à jour avec succès.');
     } catch (err) {
-      setProfileError(err.message);
+      if (/email|e-mail|courriel/i.test(err.message || '')) {
+        setProfileEmailError(err.message);
+      } else {
+        setProfileError(err.message);
+      }
     } finally {
       setProfileLoading(false);
     }
@@ -433,7 +444,7 @@ export default function Account() {
     const result = await register(signupData);
 
     if (!result.success) {
-      setAuthError(result.error);
+      setSignupErrors({ form: result.error });
     } else {
       navigate('/verification-email', {
         state: { email: signupData.email },
@@ -454,14 +465,14 @@ export default function Account() {
           <div className="auth-toggle">
             <button
               className={!isSignup ? 'active' : ''}
-              onClick={() => setIsSignup(false)}
+              onClick={() => switchAuthMode(false)}
             >
               Connexion
             </button>
 
             <button
               className={isSignup ? 'active' : ''}
-              onClick={() => setIsSignup(true)}
+              onClick={() => switchAuthMode(true)}
             >
               Inscription
             </button>
@@ -536,7 +547,7 @@ export default function Account() {
 
           <p className="auth-switch">
             Pas encore de compte ?{' '}
-            <button type="button" onClick={() => setIsSignup(true)}>
+            <button type="button" onClick={() => switchAuthMode(true)}>
               Créer un compte
             </button>
           </p>
@@ -707,8 +718,8 @@ export default function Account() {
               )}
             </div>
 
-              {authError && (
-                <p className="auth-error">{authError}</p>
+              {signupErrors.form && (
+                <p className="auth-error" role="alert">{signupErrors.form}</p>
               )}
 
               <button type="submit" className="btn-submit">
@@ -719,7 +730,7 @@ export default function Account() {
                 Déjà un compte ?{' '}
                 <button
                   type="button"
-                  onClick={() => setIsSignup(false)}
+                  onClick={() => switchAuthMode(false)}
                 >
                   Se connecter
                 </button>
@@ -1337,7 +1348,7 @@ export default function Account() {
                   <h3>Informations personnelles</h3>
 
                   {profileError && (
-                    <p className="auth-error">{profileError}</p>
+                    <p className="auth-error" role="alert">{profileError}</p>
                   )}
 
                   {profileSuccess && (
@@ -1404,7 +1415,7 @@ export default function Account() {
                       />
 
                       {profileEmailError && (
-                        <p className="field-error">{profileEmailError}</p>
+                        <p className="field-error field-error--prominent" role="alert">{profileEmailError}</p>
                       )}
                     </div>
 
