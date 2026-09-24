@@ -5,7 +5,7 @@ import './OrderSuccess.css';
 
 export default function OrderCancelled() {
   return (
-    <main className="order-success-page">
+    <div className="order-success-page">
       <section className="order-success-card">
         <div className="order-success-icon" aria-hidden="true"><FiShoppingBag /></div>
         <p className="order-success-eyebrow">Florésia · votre panier vous attend</p>
@@ -14,6 +14,6 @@ export default function OrderCancelled() {
         <p className="order-success-help">Vous pouvez modifier les quantités ou choisir un autre mode de livraison avant de réessayer.</p>
         <Link to="/panier" className="order-success-action"><ArrowLeft aria-hidden="true" /> Revenir au panier</Link>
       </section>
-    </main>
+    </div>
   );
 }

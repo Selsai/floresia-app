@@ -839,7 +839,7 @@ export default function Account() {
             </nav>
           </aside>
 
-          <main className="account-main">
+          <div className="account-main">
             {activeTab === 'dashboard' && (
               <div className="dashboard-content">
                 <h2>Bienvenue, {user.firstName} !</h2>
@@ -1601,7 +1601,7 @@ export default function Account() {
                 </div>
               </div>
             )}
-          </main>
+          </div>
         </div>
       </div>
     </div>

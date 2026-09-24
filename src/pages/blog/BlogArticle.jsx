@@ -395,7 +395,9 @@ export default function BlogArticle() {
       path: `/blog/${encodeURIComponent(id)}`,
       title: currentArticle ? `${currentArticle.title} | Florésia` : 'Article introuvable | Florésia',
       description: currentArticle ? (currentArticle.excerpt || `Lisez ${currentArticle.title} sur le blog Florésia.`).slice(0, 160) : 'Cet article est introuvable.',
+      image: currentArticle?.imageUrl,
       indexable: Boolean(currentArticle),
+      type: 'article',
     });
   }, [articles, id, loading]);
 
@@ -512,20 +514,20 @@ export default function BlogArticle() {
                 </div>
 
                 <div className="author-info">
-                  <h4>
-                    À propos de {article.displayAuthorName}
-                  </h4>
+                <h2>
+                  À propos de {article.displayAuthorName}
+                </h2>
 
                   <p>{article.displayAuthorBio}</p>
                 </div>
               </div>
 
               <div className="article-comments">
-                <h3>
+                <h2>
                   <FiMessageCircle /> {totalComments}{' '}
                   commentaire
                   {totalComments !== 1 ? 's' : ''}
-                </h3>
+                </h2>
 
                 {commentsLoading && (
                   <p>Chargement des commentaires…</p>
@@ -584,7 +586,7 @@ export default function BlogArticle() {
 
             <aside className="article-sidebar">
               <div className="sidebar-widget sticky-widget">
-                <h4>Sur le même thème</h4>
+                <h2>Sur le même thème</h2>
 
                 <div className="related-mini">
                   {relatedArticles.map((related) => (
@@ -603,7 +605,7 @@ export default function BlogArticle() {
                           {related.category}
                         </span>
 
-                        <h5>{related.title}</h5>
+                        <h3>{related.title}</h3>
                       </div>
                     </Link>
                   ))}
@@ -626,7 +628,7 @@ export default function BlogArticle() {
 
                 <div>
                   <span>Article précédent</span>
-                  <h4>{prevArticle.title}</h4>
+                  <h3>{prevArticle.title}</h3>
                 </div>
               </Link>
             ) : (
@@ -640,7 +642,7 @@ export default function BlogArticle() {
               >
                 <div>
                   <span>Article suivant</span>
-                  <h4>{nextArticle.title}</h4>
+                  <h3>{nextArticle.title}</h3>
                 </div>
 
                 <FiArrowRight />

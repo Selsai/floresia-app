@@ -75,7 +75,9 @@ export default function ProductDetail() {
       path: `/produit/${encodeURIComponent(id)}`,
       title: found ? `${product.name} | Florésia` : 'Produit introuvable | Florésia',
       description: found ? (product.description || `Découvrez ${product.name} dans le catalogue de démonstration Florésia.`).slice(0, 160) : 'Cette fiche produit est introuvable.',
+      image: found ? product.imageUrl : undefined,
       indexable: Boolean(found),
+      type: 'product',
     });
   }, [id, product, loading, error]);
 

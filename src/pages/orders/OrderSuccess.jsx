@@ -55,7 +55,7 @@ export default function OrderSuccess() {
   else if (current) message = 'La confirmation du paiement est encore en attente. Vous pouvez consulter votre compte.';
 
   return (
-    <main className="order-success-page">
+    <div className="order-success-page">
       <section className={`order-success-card ${paid ? 'is-paid' : ''}`}>
         <div className="order-success-icon" aria-hidden="true">
           {paid ? <FiCheckCircle /> : <Clock3 />}
@@ -75,6 +75,6 @@ export default function OrderSuccess() {
           Voir mes commandes <ArrowRight aria-hidden="true" />
         </Link>
       </section>
-    </main>
+    </div>
   );
 }
