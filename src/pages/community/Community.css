@@ -966,8 +966,9 @@
 }
 
 @media (max-width: 640px) {
-  .share-heading { display: block; }
-  .share-heading .share-icon { display: block; width: 30px; height: 30px; margin-bottom: 14px; }
+  .share-heading { display: flex; align-items: center; gap: 10px; }
+  .share-heading .share-icon { display: block; width: 30px; height: 30px; margin: 0; flex: 0 0 30px; }
+  .share-heading h2 { min-width: 0; margin: 0; }
   .share-content h2 { font-size: clamp(30px, 9vw, 38px); line-height: 1.14; }
   .share-content p { margin-bottom: 24px; }
   .community .stats-grid {

@@ -700,7 +700,7 @@ export default function Account() {
                     if (termsError) setTermsError('');
                   }}
                 />
-                J’ai lu les <Link to="/cgv">conditions de la démonstration</Link> et la <Link to="/confidentialite">politique de confidentialité</Link>
+                <span>J’ai lu les <Link to="/cgv">conditions de la démonstration</Link> et la <Link to="/confidentialite">politique de confidentialité</Link></span>
               </label>
               {termsError && (
                 <p className="field-error">{termsError}</p>
@@ -1174,7 +1174,7 @@ export default function Account() {
                               })
                             }
                           />
-                          Adresse par défaut
+                          <span>Adresse par défaut</span>
                         </label>
                       </div>
 

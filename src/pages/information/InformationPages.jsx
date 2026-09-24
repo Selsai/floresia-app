@@ -93,7 +93,7 @@ export function ConditionsPage() {
         <h2>Avant une véritable ouverture commerciale</h2>
         <p>Des conditions générales de vente complètes, des informations sur la livraison et la rétractation, une gestion effective des stocks et des paiements, ainsi que les coordonnées professionnelles, devront être établies et vérifiées avant toute vente réelle.</p>
       </section>
-      <p><Link to="/contact">Une question sur le projet ?</Link></p>
+      <p className="information-page__footer-link"><Link to="/contact"><Mail size={18} aria-hidden="true" />Une question sur le projet ?<ArrowUpRight size={17} aria-hidden="true" /></Link></p>
     </InformationPage>
   );
 }
