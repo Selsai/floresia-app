@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X, UserRound, ArrowUpRight } from 'lucide-react';
 import { useCart } from '../../context/cart/cart-context';
-import logo from '../../assets/brand/logo-floresia.png';
-import floralCart from '../../assets/brand/icone-panier.png';
+import logo from '../../assets/brand/logo-floresia.webp';
+import floralCart from '../../assets/brand/icone-panier.webp';
 import './Navbar.css';
 
 const links = [

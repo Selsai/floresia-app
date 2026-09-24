@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { X as FiX, Send as FiSend } from 'lucide-react';
 import { chatbotApi } from '../../services/api';
-import chatIcon from '../../assets/chat/iconChatbot.png';
+import chatIcon from '../../assets/chat/iconChatbot.webp';
 import './ChatWidget.css';
 
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
-import logoFloresia from "../../assets/brand/logo-floresia.png";
+import logoFloresia from "../../assets/brand/logo-floresia.webp";
 import "./ConsentManager.css";
 
 export const CONSENT_KEY = "floresia-consent-v1";

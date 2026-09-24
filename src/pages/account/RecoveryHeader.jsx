@@ -1,4 +1,4 @@
-import logo from '../../assets/brand/logo-floresia.png';
+import logo from '../../assets/brand/logo-floresia.webp';
 
 export default function RecoveryHeader({ eyebrow, title, children }) {
   return (

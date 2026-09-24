@@ -3,7 +3,6 @@ import { formatPrice } from '../../utils/price';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, Flower2, Sparkles } from 'lucide-react';
-import heroImage from '../../assets/home/accueil-hero.png';
 import { productsApi, articlesApi, CUSTOM_BOUQUET_PRODUCT_ID } from '../../services/api';
 import { ProductGridSkeleton, ArticleGridSkeleton } from '../../components/loading/LoadingSkeleton';
 import './Home.css';
@@ -15,6 +14,8 @@ const occasions = [
   { label: 'Naissance', category: 'NAISSANCE' },
   { label: 'Deuil', category: 'DEUIL' },
 ];
+
+const heroImage = '/accueil-hero.webp';
 
 export default function Home() {
   const [selectedOccasion, setSelectedOccasion] = useState(null);
@@ -77,7 +78,7 @@ export default function Home() {
           {!productsLoading && !productsError && <div className="home-products-grid">
             {visibleProducts.map((product) => (
               <article key={product.id} className="home-product-card">
-                <Link to={`/produit/${product.id}`} className="home-product-card__link" aria-label={`Découvrir ${product.name}`}>
+                <Link to={`/produit/${product.id}`} className="home-product-card__link">
                   <div className="home-product-image-wrap"><img src={product.imageUrl} alt={product.name} className="home-product-image" loading="lazy" onLoad={(event) => event.currentTarget.classList.add('is-loaded')} onError={(event) => event.currentTarget.classList.add('is-loaded')} /></div>
                   <div className="home-product-body"><span className="home-product-kicker">Création Florésia</span><h3 className="home-product-name">{product.name}</h3><div className="home-product-footer"><span className="home-product-price">{formatPrice(product.price)}</span><span className="home-product-arrow"><ArrowUpRight size={20} aria-hidden="true" /></span></div></div>
                 </Link>

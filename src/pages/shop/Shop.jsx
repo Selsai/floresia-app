@@ -6,7 +6,7 @@ import { ArrowUpRight, Heart as FiHeart, Search as FiSearch, ArrowUp as FiArrowU
 import { productsApi, favoritesApi, CUSTOM_BOUQUET_PRODUCT_ID } from '../../services/api';
 import { useAuth } from '../../context/auth/auth-context';
 import { useToast } from '../../context/toast/toast-context';
-import iconeCiseau from '../../assets/shared/icone-ciseau.png';
+import iconeCiseau from '../../assets/shared/icone-ciseau.webp';
 import { ProductGridSkeleton } from '../../components/loading/LoadingSkeleton';
 import FloralSelect from '../../components/select/FloralSelect';
 import './Shop.css';

@@ -2,7 +2,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Mail } from 'lucide-react';
 import { FaInstagram } from 'react-icons/fa';
-import logo from '../../assets/brand/logo-floresia.png';
+import logo from '../../assets/brand/logo-floresia.webp';
 import './Footer.css';
 
 export default function Footer() {
