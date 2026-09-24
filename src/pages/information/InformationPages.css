@@ -133,3 +133,4 @@
   .information-page__contact > span { grid-column: 2; }
   .information-page__contact a { grid-column: 1 / -1; padding-left: 32px; }
 }
+.information-page__preferences { padding: 12px 18px; border-radius: 12px; background: var(--green); color: var(--white); font-weight: 700; }

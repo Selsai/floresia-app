@@ -1,0 +1,107 @@
+.consent-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(35, 20, 28, 0.58);
+}
+.consent-dialog {
+  width: min(520px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  padding: 30px;
+  border-radius: 28px;
+  background: #fffdfb;
+  box-shadow: 0 28px 80px rgba(35, 20, 28, 0.3);
+  color: var(--text-dark);
+}
+.consent-heading {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.consent-heading svg {
+  flex: none;
+  color: var(--green);
+  margin-top: 4px;
+}
+.consent-heading span {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--green);
+}
+.consent-heading h2 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(1.55rem, 5vw, 2rem);
+  line-height: 1.15;
+  margin: 3px 0 16px;
+}
+.consent-dialog > p {
+  color: var(--text-mid);
+  line-height: 1.65;
+}
+.consent-dialog a {
+  color: var(--green-dark);
+  text-decoration: underline;
+}
+.consent-options {
+  display: grid;
+  gap: 10px;
+  margin: 20px 0;
+}
+.consent-options label {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--beige);
+}
+.consent-options span {
+  display: grid;
+}
+.consent-options small {
+  color: var(--text-mid);
+}
+.consent-options input {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  accent-color: var(--green);
+}
+.consent-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+}
+.consent-actions button {
+  min-height: 46px;
+  border: 1px solid var(--green);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--green-dark);
+  font-weight: 700;
+}
+.consent-actions .primary {
+  background: var(--green);
+  color: #fff;
+}
+@media (max-width: 520px) {
+  .consent-backdrop {
+    align-items: end;
+    padding: 10px;
+  }
+  .consent-dialog {
+    padding: 24px 20px;
+    border-radius: 24px;
+  }
+  .consent-heading h2 {
+    font-family: inherit;
+    font-weight: 800;
+  }
+}

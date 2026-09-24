@@ -13,6 +13,7 @@ import NotFound from '../pages/not-found/NotFound';
 
 import Home from '../pages/home/Home';
 import ChatWidget from '../components/chat/ChatWidget';
+import ConsentManager from '../components/consent/ConsentManager';
 import '../components/loading/RouteLoading.css';
 
 const Shop = lazy(() => import('../pages/shop/Shop'));
@@ -59,6 +60,7 @@ export default function App() {
               <PageMeta />
               <Navbar />
               <ChatWidget /> {/* Le widget est chargé une fois et reste actif sur toutes les pages */}
+              <ConsentManager />
               <main>
                 <Suspense fallback={<RouteLoading />}><Routes>
                   <Route path="/" element={<Home />} />

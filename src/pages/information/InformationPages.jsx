@@ -124,8 +124,9 @@ export function PrivacyPage() {
 }
 
 export function CookiesPage() {
+  const openPreferences = () => window.dispatchEvent(new Event('floresia:open-consent'));
   return (
-    <InformationPage title="Cookies et stockage local" intro="Florésia n’utilise pas actuellement de mesure d’audience ou de publicité dans son code.">
+    <InformationPage title="Cookies et stockage local" intro="Vous gardez le contrôle des stockages et de la mesure d’audience utilisés par Florésia.">
       <section>
         <h2>Ce que le site conserve</h2>
         <ul>
@@ -142,7 +143,8 @@ export function CookiesPage() {
       </section>
       <section>
         <h2>Choix de consentement</h2>
-        <p>Aucun traceur publicitaire ou de mesure d’audience nécessitant un choix de consentement n’a été identifié dans le code actuel. Si un tel outil est ajouté, son chargement devra être conditionné à un choix préalable et révocable. Cette page sera mise à jour en conséquence.</p>
+        <p>La mesure d’audience est facultative et reste bloquée tant que vous ne l’avez pas acceptée. Votre choix est enregistré localement et peut être modifié à tout moment.</p>
+        <p><button type="button" className="information-page__preferences" onClick={openPreferences}>Modifier mes préférences</button></p>
       </section>
     </InformationPage>
   );
