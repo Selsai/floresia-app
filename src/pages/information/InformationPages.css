@@ -1,3 +1,5 @@
+/*  Rôle : styles de InformationPages.  */
+/*  Champs de formulaire.  */
 .information-page.container {
   max-width: 1040px;
   padding: clamp(40px, 6vw, 80px) 24px 110px;
@@ -6,10 +8,40 @@
   position: relative;
   isolation: isolate;
 }
-.information-page__hero { position: relative; overflow: hidden; margin-bottom: clamp(26px, 4vw, 42px); padding: clamp(30px, 5vw, 56px); border-radius: 30px; color: var(--white); background: linear-gradient(126deg, var(--color-77274f) 0%, var(--color-a83a75) 60%, var(--color-d576a3) 100%); box-shadow: 0 22px 50px var(--alpha-f2b355e4); }
-.information-page__hero::after { content: ''; position: absolute; right: -100px; bottom: -170px; width: 400px; height: 400px; border: 1px solid var(--alpha-0d41cad3); border-radius: 50%; box-shadow: 0 0 0 55px var(--alpha-53fc295c), 0 0 0 110px var(--alpha-b36273ea); pointer-events: none; }
+/*  Champs de formulaire.  */
+.information-page__hero {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: clamp(26px, 4vw, 42px);
+  padding: clamp(30px, 5vw, 56px);
+  border-radius: 30px;
+  color: var(--white);
+  background: linear-gradient(
+    126deg,
+    var(--color-77274f) 0%,
+    var(--color-a83a75) 60%,
+    var(--color-d576a3) 100%
+  );
+  box-shadow: 0 22px 50px var(--alpha-f2b355e4);
+}
+/*  Champs de formulaire.  */
+.information-page__hero::after {
+  content: "";
+  position: absolute;
+  right: -100px;
+  bottom: -170px;
+  width: 400px;
+  height: 400px;
+  border: 1px solid var(--alpha-0d41cad3);
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 55px var(--alpha-53fc295c),
+    0 0 0 110px var(--alpha-b36273ea);
+  pointer-events: none;
+}
+/*  Champs de formulaire.  */
 .information-page__eyebrow::after {
-  content: '';
+  content: "";
   display: inline-block;
   width: 44px;
   height: 1px;
@@ -17,16 +49,18 @@
   vertical-align: middle;
   background: var(--color-dba6be);
 }
+/*  Champs de formulaire.  */
 .information-page__eyebrow {
   color: var(--color-ffe7f1);
-  font-size: .75rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: .13em;
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   margin-bottom: 12px;
 }
+/*  Champs de formulaire.  */
 .information-page h1 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: "Playfair Display", Georgia, serif;
   color: var(--white);
   font-size: clamp(2rem, 4vw, 3.4rem);
   line-height: 1.1;
@@ -35,6 +69,7 @@
   position: relative;
   z-index: 1;
 }
+/*  Champs de formulaire.  */
 .information-page__intro {
   font-size: 1.1rem;
   line-height: 1.7;
@@ -44,10 +79,12 @@
   position: relative;
   z-index: 1;
 }
+/*  Champs de formulaire.  */
 .information-page__body {
   display: grid;
   gap: 20px;
 }
+/*  Champs de formulaire.  */
 .information-page__body > section {
   border: 1px solid var(--color-edd8e2);
   background: linear-gradient(155deg, var(--white) 50%, var(--color-fff7fa));
@@ -57,15 +94,26 @@
   position: relative;
   overflow: hidden;
   counter-increment: information-section;
-  transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
-.information-page__body > section:nth-of-type(3n + 2) { background: linear-gradient(155deg, var(--color-fff8fb), var(--color-f9e9f0)); }
-.information-page__body > section:nth-of-type(3n + 3) { background: linear-gradient(155deg, var(--white), var(--color-f8f1ec)); }
+/*  Champs de formulaire.  */
+.information-page__body > section:nth-of-type(3n + 2) {
+  background: linear-gradient(155deg, var(--color-fff8fb), var(--color-f9e9f0));
+}
+/*  Champs de formulaire.  */
+.information-page__body > section:nth-of-type(3n + 3) {
+  background: linear-gradient(155deg, var(--white), var(--color-f8f1ec));
+}
+/*  Champs de formulaire.  */
 .information-page__body > section:hover {
   border-color: var(--color-dcaac0);
   transform: translateY(-2px);
   box-shadow: 0 22px 44px var(--alpha-55d88338);
 }
+/*  Champs de formulaire.  */
 .information-page__body > section::before {
   content: counter(information-section, decimal-leading-zero);
   display: inline-grid;
@@ -75,62 +123,163 @@
   margin-bottom: 18px;
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: .12em;
+  letter-spacing: 0.12em;
   color: var(--color-a73c77);
   border: 1px solid var(--color-efd1de);
   border-radius: 50%;
   background: var(--color-fff6f9);
 }
+/*  Champs de formulaire.  */
 .information-page h2 {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: "Playfair Display", Georgia, serif;
   font-size: 1.45rem;
   margin: 0 0 12px;
   line-height: 1.25;
 }
+/*  Champs de formulaire.  */
 .information-page p,
 .information-page li {
   line-height: 1.75;
   overflow-wrap: anywhere;
 }
+/*  Champs de formulaire.  */
 .information-page p + p {
   margin-top: 12px;
 }
+/*  Champs de formulaire.  */
 .information-page ul {
   padding-left: 22px;
 }
+/*  Champs de formulaire.  */
 .information-page a {
   color: var(--color-973768);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+/*  Champs de formulaire.  */
 .information-page a:focus-visible {
   outline: 3px solid var(--color-973768);
   outline-offset: 3px;
 }
-.information-page__contact { display: grid; grid-template-columns: auto minmax(0, auto) minmax(0, 1fr) auto; align-items: center; gap: 8px 12px; margin: 16px 0 20px; padding: 14px 16px; border: 1px solid var(--color-e6b9ce); border-radius: 16px; background: var(--white); color: var(--color-74314f); }
-.information-page__contact > svg { flex: none; color: var(--color-a83a75); }
-.information-page__contact > span { font-size: 13px; font-weight: 700; }
-.information-page__contact a { display: inline-flex; align-items: center; font-weight: 700; text-decoration: none; overflow-wrap: anywhere; }
-.information-page__contact a:hover { text-decoration: underline; }
-.information-page__footer-link { grid-column: 1 / -1; display: flex; justify-content: center; }
-.information-page__footer-link a { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 48px; padding: 12px 20px; border: 1px solid var(--border); border-radius: 999px; background: var(--white); color: var(--pink-dark); font-weight: 800; text-decoration: none; box-shadow: 0 10px 24px var(--alpha-d1776070); }
-.information-page__footer-link a:hover { border-color: var(--pink); transform: translateY(-2px); }
+/*  Champs de formulaire.  */
+.information-page__contact {
+  display: grid;
+  grid-template-columns: auto minmax(0, auto) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 16px 0 20px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-e6b9ce);
+  border-radius: 16px;
+  background: var(--white);
+  color: var(--color-74314f);
+}
+/*  Champs de formulaire.  */
+.information-page__contact > svg {
+  flex: none;
+  color: var(--color-a83a75);
+}
+/*  Champs de formulaire.  */
+.information-page__contact > span {
+  font-size: 13px;
+  font-weight: 700;
+}
+/*  Champs de formulaire.  */
+.information-page__contact a {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+/*  Champs de formulaire.  */
+.information-page__contact a:hover {
+  text-decoration: underline;
+}
+/*  Champs de formulaire.  */
+.information-page__footer-link {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+}
+/*  Champs de formulaire.  */
+.information-page__footer-link a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--pink-dark);
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 10px 24px var(--alpha-d1776070);
+}
+/*  Champs de formulaire.  */
+.information-page__footer-link a:hover {
+  border-color: var(--pink);
+  transform: translateY(-2px);
+}
+
+/*  Adaptation responsive.  */
 
 @media (min-width: 900px) {
-  .information-page__body { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
-  .information-page__body > section:only-of-type { grid-column: 1 / -1; }
-  .information-page__body > section:last-of-type:nth-of-type(2n + 3) { grid-column: 1 / -1; width: calc(50% - 10px); justify-self: center; }
-  .information-page__body > p { grid-column: 1 / -1; }
+  .information-page__body {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  .information-page__body > section:only-of-type {
+    grid-column: 1 / -1;
+  }
+  .information-page__body > section:last-of-type:nth-of-type(2n + 3) {
+    grid-column: 1 / -1;
+    width: calc(50% - 10px);
+    justify-self: center;
+  }
+  .information-page__body > p {
+    grid-column: 1 / -1;
+  }
 }
 
+/*  Adaptation responsive.  */
+
 @media (max-width: 640px) {
-  .information-page.container { padding: 36px 20px 110px; }
-  .information-page__hero { padding: 32px 26px; border-radius: 24px; }
-  .information-page__intro { font-size: 1rem; }
-  .information-page__body { gap: 16px; }
-  .information-page h2 { font-size: 1.35rem; line-height: 1.25; }
-  .information-page__contact { grid-template-columns: auto 1fr auto; }
-  .information-page__contact > span { grid-column: 2; }
-  .information-page__contact a { grid-column: 1 / -1; padding-left: 32px; }
+  .information-page.container {
+    padding: 36px 20px 110px;
+  }
+  .information-page__hero {
+    padding: 32px 26px;
+    border-radius: 24px;
+  }
+  .information-page__intro {
+    font-size: 1rem;
+  }
+  .information-page__body {
+    gap: 16px;
+  }
+  .information-page h2 {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+  .information-page__contact {
+    grid-template-columns: auto 1fr auto;
+  }
+  .information-page__contact > span {
+    grid-column: 2;
+  }
+  .information-page__contact a {
+    grid-column: 1 / -1;
+    padding-left: 32px;
+  }
 }
-.information-page__preferences { padding: 12px 18px; border-radius: 12px; background: var(--green); color: var(--white); font-weight: 700; }
+/*  Champs de formulaire.  */
+.information-page__preferences {
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--green);
+  color: var(--white);
+  font-weight: 700;
+}

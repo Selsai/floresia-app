@@ -1,3 +1,4 @@
+// Rôle : État partagé de l’application.
 // confirm-context : confirmation des actions.
 import { createContext, useContext } from 'react';
 export const ConfirmContext = createContext();

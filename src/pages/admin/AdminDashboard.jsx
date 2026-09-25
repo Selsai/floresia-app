@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // AdminDashboard : gestion de la boutique.
 import { useState, useEffect, useCallback } from 'react';
 import { Navigate } from 'react-router-dom';

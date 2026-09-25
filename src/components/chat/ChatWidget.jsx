@@ -1,3 +1,4 @@
+// Rôle : Composant réutilisable de l’interface.
 // ChatWidget : conversation avec Flora.
 import { useState, useRef, useEffect } from 'react';
 import { X as FiX, Send as FiSend } from 'lucide-react';

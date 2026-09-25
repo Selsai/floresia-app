@@ -1,3 +1,4 @@
+// Rôle : Composant réutilisable de l’interface.
 // detail-meta : metadonnees des pages.
 export function updateDetailMeta({ path, title, description, image, indexable, type = 'website' }) {
   document.title = title;

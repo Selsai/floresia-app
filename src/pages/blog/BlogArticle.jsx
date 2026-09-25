@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // BlogArticle : lecture des articles et commentaires.
 import { useState, useEffect, useCallback } from 'react';
 

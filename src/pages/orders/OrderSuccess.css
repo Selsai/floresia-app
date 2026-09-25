@@ -1,3 +1,7 @@
+/*  Rôle : styles de OrderSuccess.  */
+
+/*  États et messages.  */
+
 .order-success-page {
   min-height: 72vh;
   display: grid;
@@ -9,6 +13,8 @@
     var(--beige);
 }
 
+/*  Cartes et listes.  */
+
 .order-success-card {
   width: min(100%, 680px);
   padding: clamp(30px, 6vw, 58px);
@@ -19,22 +25,119 @@
   text-align: center;
 }
 
-.order-success-icon { display: grid; place-items: center; width: 82px; height: 82px; margin: 0 auto 22px; border-radius: 50%; background: var(--pink-light); color: var(--pink-dark); }
-.order-success-card.is-paid .order-success-icon { background: var(--color-e8f5e0); color: var(--green-dark); }
-.order-success-icon svg { width: 42px; height: 42px; }
-.order-success-eyebrow { color: var(--green-dark); font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
-.order-success-card h1 { margin: 10px 0 14px; color: var(--text-dark); font: 700 clamp(32px, 6vw, 52px)/1.08 'Playfair Display', serif; }
-.order-success-message { max-width: 48ch; margin: 0 auto; color: var(--text-mid); font-size: 17px; }
-.order-success-reference { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 8px; margin: 26px 0 18px; padding: 14px 18px; border: 1px solid var(--border); border-radius: 16px; background: var(--white); color: var(--text-mid); }
-.order-success-reference svg { width: 19px; color: var(--pink); }
-.order-success-reference strong { color: var(--text-dark); overflow-wrap: anywhere; }
-.order-success-help { margin: 0 auto 24px; max-width: 48ch; color: var(--text-mid); font-size: 14px; }
-.order-success-action { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 50px; padding: 13px 24px; border-radius: 999px; background: linear-gradient(135deg, var(--pink-dark), var(--pink)); color: var(--white); font-weight: 800; box-shadow: 0 12px 28px var(--alpha-b5fd7d9e); transition: transform .2s, box-shadow .2s; }
-.order-success-action:hover { transform: translateY(-2px); box-shadow: 0 16px 32px var(--alpha-b5fd7d9e); }
-.order-success-action svg { width: 18px; }
+/*  États et messages.  */
+
+.order-success-icon {
+  display: grid;
+  place-items: center;
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: var(--pink-light);
+  color: var(--pink-dark);
+}
+/*  Cartes et listes.  */
+.order-success-card.is-paid .order-success-icon {
+  background: var(--color-e8f5e0);
+  color: var(--green-dark);
+}
+/*  États et messages.  */
+.order-success-icon svg {
+  width: 42px;
+  height: 42px;
+}
+/*  Cartes et listes.  */
+.order-success-eyebrow {
+  color: var(--green-dark);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+/*  Cartes et listes.  */
+.order-success-card h1 {
+  margin: 10px 0 14px;
+  color: var(--text-dark);
+  font:
+    700 clamp(32px, 6vw, 52px)/1.08 "Playfair Display",
+    serif;
+}
+/*  États et messages.  */
+.order-success-message {
+  max-width: 48ch;
+  margin: 0 auto;
+  color: var(--text-mid);
+  font-size: 17px;
+}
+/*  États et messages.  */
+.order-success-reference {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 26px 0 18px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--white);
+  color: var(--text-mid);
+}
+/*  États et messages.  */
+.order-success-reference svg {
+  width: 19px;
+  color: var(--pink);
+}
+/*  États et messages.  */
+.order-success-reference strong {
+  color: var(--text-dark);
+  overflow-wrap: anywhere;
+}
+/*  États et messages.  */
+.order-success-help {
+  margin: 0 auto 24px;
+  max-width: 48ch;
+  color: var(--text-mid);
+  font-size: 14px;
+}
+/*  Boutons et actions.  */
+.order-success-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 50px;
+  padding: 13px 24px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--pink-dark), var(--pink));
+  color: var(--white);
+  font-weight: 800;
+  box-shadow: 0 12px 28px var(--alpha-b5fd7d9e);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+/*  Boutons et actions.  */
+.order-success-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px var(--alpha-b5fd7d9e);
+}
+/*  Boutons et actions.  */
+.order-success-action svg {
+  width: 18px;
+}
+
+/*  Adaptation responsive.  */
 
 @media (max-width: 520px) {
-  .order-success-page { padding-inline: 16px; }
-  .order-success-card { border-radius: 24px; }
-  .order-success-action { width: 100%; }
+  .order-success-page {
+    padding-inline: 16px;
+  }
+  .order-success-card {
+    border-radius: 24px;
+  }
+  .order-success-action {
+    width: 100%;
+  }
 }

@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 import logo from '../../assets/brand/logo-floresia.webp';
 
 export default function RecoveryHeader({ eyebrow, title, children }) {

@@ -1,3 +1,7 @@
+/*  Rôle : styles de Toast.  */
+
+/*  Styles de .toast.  */
+
 .toast {
   position: fixed;
   bottom: 32px;
@@ -18,6 +22,8 @@
   max-width: 90vw;
 }
 
+/*  Boutons et actions.  */
+
 .toast-action {
   background: var(--pink);
   color: var(--white);
@@ -31,17 +37,41 @@
   transition: background 0.2s;
 }
 
+/*  Boutons et actions.  */
+
 .toast-action:hover {
   background: var(--pink-dark);
 }
 
 @keyframes toast-in {
-  from { opacity: 0; transform: translate(-50%, 20px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+  from {
+    opacity: 0;
+    transform: translate(-50%, 20px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }
 
+/*  Adaptation responsive.  */
+
 @media (max-width: 520px) {
-  .toast { bottom: max(18px, env(safe-area-inset-bottom)); width: calc(100% - 32px); max-width: none; justify-content: space-between; gap: 10px; padding: 12px 14px; border-radius: 16px; }
-  .toast > span { min-width: 0; overflow-wrap: anywhere; }
-  .toast-action { flex: none; padding-inline: 12px; }
+  .toast {
+    bottom: max(18px, env(safe-area-inset-bottom));
+    width: calc(100% - 32px);
+    max-width: none;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 16px;
+  }
+  .toast > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .toast-action {
+    flex: none;
+    padding-inline: 12px;
+  }
 }

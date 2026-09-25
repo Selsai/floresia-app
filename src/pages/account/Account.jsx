@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // Account : profil, adresses et commandes.
 import { formatPrice } from '../../utils/price';
 import { useState, useEffect } from 'react';

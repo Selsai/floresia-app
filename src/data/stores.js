@@ -1,3 +1,4 @@
+// Rôle : Données et calculs utilisés par l’interface.
 // stores : donnees locales.
 export const STORES = [
   {

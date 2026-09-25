@@ -1,3 +1,4 @@
+// Rôle : État partagé de l’application.
 // ToastContext : messages de notification.
 import { useState, useCallback } from 'react';
 import './Toast.css';

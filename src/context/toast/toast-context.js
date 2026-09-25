@@ -1,3 +1,4 @@
+// Rôle : État partagé de l’application.
 // toast-context : notifications.
 import { createContext, useContext } from 'react';
 export const ToastContext = createContext();

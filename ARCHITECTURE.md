@@ -1,52 +1,100 @@
 # Architecture du front Florésia
 
-Ce document sert de repère rapide pour retrouver une fonctionnalité sans parcourir tout le projet.
+Ce document décrit les fichiers du front afin de retrouver rapidement une fonctionnalité.
 
-## Racine
-
-| Chemin | Rôle |
-|---|---|
-| `index.html` | Modèle HTML et métadonnées initiales. |
-| `vite.config.js` | Configuration du build. |
-| `vitest.config.js` | Configuration des tests. |
-| `.env.example` | Variables publiques attendues. |
-| `scripts/generate-seo-files.mjs` | Génère le sitemap et robots.txt. |
-| `public/` | Fichiers publics copiés dans le build. |
-| `tests/` | Tests des parcours essentiels. |
-
-## Code de l’application
+## Fichiers de la racine
 
 | Chemin | Rôle |
 |---|---|
-| `src/main.jsx` | Monte l’application React. |
-| `src/app/App.jsx` | Déclare les routes et contextes globaux. |
-| `src/index.css` | Variables et styles partagés. |
-| `src/services/api.js` | Centralise les appels vers l’API. |
-| `src/context/auth` | Gère la session utilisateur. |
-| `src/context/cart` | Gère le panier et ses totaux. |
-| `src/context/toast` | Affiche les messages temporaires. |
-| `src/context/confirm` | Affiche les confirmations. |
-| `src/components/consent` | Gère les cookies et GA4. |
-| `src/components/meta` | Met à jour les métadonnées SEO. |
-| `src/components/address` | Recherche et sélectionne une adresse. |
-| `src/components/chat` | Affiche le chatbot Flora. |
+| `package.json` | Dépendances et commandes npm. |
+| `package-lock.json` | Versions exactes installées. |
+| `index.html` | HTML initial, SEO et ressources prioritaires. |
+| `vite.config.js` | Build Vite et copie de `.htaccess`. |
+| `vitest.config.js` | Environnement et couverture des tests. |
+| `eslint.config.js` | Règles JavaScript et React. |
+| `.env.example` | Exemple des variables publiques. |
+| `.env.production` | Valeurs publiques du build en ligne. |
+| `.gitignore` | Fichiers locaux, builds et archives exclus. |
+| `README.md` | Installation, contrôles et déploiement. |
+
+## Code dans `src`
+
+| Chemin | Rôle |
+|---|---|
+| `main.jsx` | Monte React dans la page. |
+| `app/App.jsx` | Routes, contextes et structure commune. |
+| `index.css` | Variables et styles généraux. |
+| `services/api.js` | Toutes les requêtes vers l’API. |
+| `utils/price.js` | Formatage des prix en euros. |
+| `data/stores.js` | Recherche et tri des fleuristes de démonstration. |
+| `context/auth` | Session, connexion et inscription. |
+| `context/cart` | Panier, quantités et total. |
+| `context/toast` | Messages temporaires. |
+| `context/confirm` | Demandes de confirmation. |
+
+## Composants
+
+| Dossier | Rôle |
+|---|---|
+| `components/navbar` | Navigation et menu mobile. |
+| `components/footer` | Pied de page et liens. |
+| `components/chat` | Chatbot Flora. |
+| `components/consent` | Cookies et chargement conditionnel de GA4. |
+| `components/meta` | Titres, descriptions, canonique et réseaux sociaux. |
+| `components/address` | Autocomplétion d’adresse et coordonnées. |
+| `components/select` | Liste déroulante accessible. |
+| `components/loading` | Squelettes de chargement. |
 
 ## Pages
 
-| Dossier | Fonctionnalité |
+| Dossier | Rôle |
 |---|---|
 | `pages/home` | Accueil et sélections. |
 | `pages/shop` | Catalogue, filtres et favoris. |
 | `pages/product` | Détail d’un bouquet. |
 | `pages/custom-bouquet` | Composition personnalisée. |
-| `pages/cart` | Panier, livraison et paiement simulé. |
-| `pages/orders` | Résultat de la commande. |
-| `pages/account` | Compte, profil et adresses. |
-| `pages/blog` | Articles et commentaires. |
+| `pages/cart` | Panier, livraison, retrait et paiement. |
+| `pages/orders` | Succès ou annulation de commande. |
+| `pages/account` | Connexion, profil, adresses et commandes. |
+| `pages/blog` | Journal floral et commentaires. |
 | `pages/community` | Avis et galerie. |
 | `pages/admin` | Gestion administrateur. |
-| `pages/information` | Pages légales et contact. |
+| `pages/information` | Contact, mentions, conditions, RGPD et cookies. |
+| `pages/not-found` | Route inconnue. |
+
+## Images et fichiers publics
+
+| Dossier | Contenu |
+|---|---|
+| `src/assets/brand` | Logo et panier. |
+| `src/assets/home` | Décors de l’accueil. |
+| `src/assets/blog` | Illustration du journal. |
+| `src/assets/community` | Bannière, galerie et témoignages. |
+| `src/assets/custom-bouquet` | Ruban du configurateur. |
+| `src/assets/chat` | Icône de Flora. |
+| `src/assets/footer` | Décors du pied de page. |
+| `src/assets/shared` | Ciseau partagé. |
+| `public/products` | Images stables des bouquets. |
+| `public/flowers` | Images stables des fleurs. |
+| `public/blog` | Images stables des articles. |
+| `public/.htaccess` | Routes SPA, cache et compression. |
+| `public/accueil-hero.webp` | Image principale préchargée. |
+
+Les fichiers WebP sont les versions légères utilisées dans l’interface. Certains PNG restent comme sources originales ou images sociales.
+
+## Scripts et tests
+
+| Chemin | Rôle |
+|---|---|
+| `scripts/generate-seo-files.mjs` | Génère `sitemap.xml` et `robots.txt`. |
+| `tests/parcours.test.jsx` | Parcours publics. |
+| `tests/commande.test.jsx` | Panier et commande. |
+| `tests/services-contextes.test.jsx` | API, session et panier. |
+| `tests/address-autocomplete.test.jsx` | Sélection d’adresse. |
+| `tests/consent-manager.test.jsx` | Choix des cookies. |
+| `tests/fixtures.jsx` | Données communes. |
+| `tests/setup.js` | Préparation de Vitest. |
 
 ## Parcours d’une donnée
 
-Une page appelle `services/api.js`. Le service ajoute le jeton si la route est protégée, contacte l’API et transforme les erreurs en messages lisibles. La page ou un contexte met ensuite l’interface à jour.
+Une page appelle `services/api.js`. Le service ajoute le jeton aux routes protégées, contacte l’API et transforme les erreurs en messages lisibles. La page ou un contexte met ensuite l’interface à jour.

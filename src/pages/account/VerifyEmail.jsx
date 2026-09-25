@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // VerifyEmail : verification du courriel.
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';

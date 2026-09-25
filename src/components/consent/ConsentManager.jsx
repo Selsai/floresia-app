@@ -1,3 +1,4 @@
+// Rôle : Composant réutilisable de l’interface.
 import { useEffect, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import logoFloresia from "../../assets/brand/logo-floresia.webp";

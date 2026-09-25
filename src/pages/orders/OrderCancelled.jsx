@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // OrderCancelled : annulation de paiement.
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ShoppingBag as FiShoppingBag } from 'lucide-react';

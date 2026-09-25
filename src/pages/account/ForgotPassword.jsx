@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // ForgotPassword : demande de nouveau mot de passe.
 import { useState } from 'react';
 import { Link } from 'react-router-dom';

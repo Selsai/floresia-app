@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // NotFound : page introuvable.
 import { Link } from 'react-router-dom';
 import '../information/InformationPages.css';

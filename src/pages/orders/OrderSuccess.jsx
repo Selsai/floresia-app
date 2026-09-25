@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // OrderSuccess : confirmation de commande.
 import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';

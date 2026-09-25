@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // Shop : catalogue, filtres et favoris.
 import { formatPrice } from '../../utils/price';
 import { useState, useEffect } from 'react';

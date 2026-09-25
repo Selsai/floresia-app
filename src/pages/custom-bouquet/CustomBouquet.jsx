@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // CustomBouquet : composition du bouquet personnalise.
 import { formatPrice } from '../../utils/price';
 import { useState, useEffect, useMemo } from 'react';

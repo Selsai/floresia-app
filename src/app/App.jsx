@@ -1,3 +1,4 @@
+// Rôle : Structure et navigation de l’application.
 // App : navigation et fournisseurs globaux.
 import { lazy, Suspense, useLayoutEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';

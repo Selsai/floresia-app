@@ -1,3 +1,4 @@
+// Rôle : Composant réutilisable de l’interface.
 // AddressAutocomplete : suggestions et validation des adresses.
 import { useState } from 'react';
 

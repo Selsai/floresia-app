@@ -1,3 +1,4 @@
+// Rôle : État partagé de l’application.
 // cart-context : gestion du panier.
 import { createContext, useContext } from 'react';
 export const CartContext = createContext();

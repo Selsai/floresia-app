@@ -1,3 +1,4 @@
+// Rôle : État partagé de l’application.
 // auth-context : session utilisateur.
 import { createContext, useContext } from 'react';
 export const AuthContext = createContext();

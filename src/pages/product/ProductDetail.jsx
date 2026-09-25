@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // ProductDetail : details du produit et ajout au panier.
 import { formatPrice } from '../../utils/price';
 import { useState, useEffect } from 'react';

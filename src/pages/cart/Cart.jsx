@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // Cart : panier, livraison et paiement.
 import { formatPrice } from '../../utils/price';
 // Cart.jsx

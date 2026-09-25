@@ -1,3 +1,4 @@
+// Rôle : État partagé de l’application.
 // ConfirmContext : dialogue de confirmation.
 import { useState, useCallback, useRef } from 'react';
 import { TriangleAlert as FiAlertTriangle } from 'lucide-react';

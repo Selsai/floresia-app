@@ -1,3 +1,7 @@
+/*  Rôle : styles de ConfirmModal.  */
+
+/*  Fenêtres modales.  */
+
 .confirm-overlay {
   position: fixed;
   inset: 0;
@@ -11,9 +15,15 @@
 }
 
 @keyframes confirm-fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
+
+/*  Fenêtres modales.  */
 
 .confirm-modal {
   background: var(--white);
@@ -27,9 +37,17 @@
 }
 
 @keyframes confirm-pop-in {
-  from { transform: scale(0.92); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
+
+/*  Fenêtres modales.  */
 
 .confirm-icon {
   width: 56px;
@@ -44,10 +62,14 @@
   margin: 0 auto 20px;
 }
 
+/*  Fenêtres modales.  */
+
 .confirm-icon.danger {
   background: var(--color-fdeaea);
   color: var(--color-d9534f);
 }
+
+/*  Fenêtres modales.  */
 
 .confirm-modal h3 {
   font-size: 19px;
@@ -56,6 +78,8 @@
   margin-bottom: 10px;
 }
 
+/*  Fenêtres modales.  */
+
 .confirm-modal p {
   font-size: 14px;
   color: var(--text-mid);
@@ -63,10 +87,14 @@
   margin-bottom: 28px;
 }
 
+/*  Fenêtres modales.  */
+
 .confirm-actions {
   display: flex;
   gap: 12px;
 }
+
+/*  Fenêtres modales.  */
 
 .confirm-actions button {
   flex: 1;
@@ -79,33 +107,52 @@
   transition: all 0.2s;
 }
 
+/*  Fenêtres modales.  */
+
 .confirm-cancel {
   background: var(--beige);
   color: var(--text-dark);
 }
 
+/*  Fenêtres modales.  */
+
 .confirm-cancel:hover {
   background: var(--border);
 }
+
+/*  Fenêtres modales.  */
 
 .confirm-confirm {
   background: var(--pink);
   color: var(--white);
 }
 
+/*  Fenêtres modales.  */
+
 .confirm-confirm:hover {
   background: var(--pink-dark);
 }
+
+/*  Fenêtres modales.  */
 
 .confirm-confirm.danger {
   background: var(--color-d9534f);
 }
 
+/*  Fenêtres modales.  */
+
 .confirm-confirm.danger:hover {
   background: var(--color-c9302c);
 }
 
+/*  Adaptation responsive.  */
+
 @media (max-width: 520px) {
-  .confirm-overlay { padding: 16px; }
-  .confirm-modal { width: 100%; padding: 26px 20px; }
+  .confirm-overlay {
+    padding: 16px;
+  }
+  .confirm-modal {
+    width: 100%;
+    padding: 26px 20px;
+  }
 }

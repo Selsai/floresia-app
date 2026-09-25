@@ -1,11 +1,106 @@
-.floral-select { position: relative; min-width: 0; }
-.floral-select__trigger { display: flex; align-items: center; justify-content: space-between; gap: 18px; width: 100%; min-height: 48px; padding: 11px 16px; border: 1px solid var(--color-e9cbd8); border-radius: 14px; background: linear-gradient(135deg, var(--white), var(--color-fff5f8)); color: var(--color-492937); font: 600 14px/1.3 'DM Sans', sans-serif; text-align: left; box-shadow: 0 5px 15px var(--color-782d540d); transition: border-color .2s, box-shadow .2s, transform .2s; }
-.floral-select__trigger:hover, .floral-select.is-open .floral-select__trigger { border-color: var(--color-b44c82); box-shadow: 0 8px 22px var(--color-a83a7524); }
-.floral-select__trigger svg { flex: none; color: var(--color-a83a75); transition: transform .2s; }
-.floral-select.is-open .floral-select__trigger svg { transform: rotate(180deg); }
-.floral-select__options { position: absolute; z-index: 40; top: calc(100% + 8px); left: 0; right: 0; display: grid; gap: 3px; max-height: 260px; padding: 7px; overflow-y: auto; border: 1px solid var(--color-e9cbd8); border-radius: 17px; background: var(--color-fffafc); box-shadow: 0 18px 40px var(--color-50223a2b); }
-.floral-select__option { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 41px; padding: 9px 11px; border-radius: 10px; background: var(--transparent); color: var(--color-573443); font: 500 14px/1.3 'DM Sans', sans-serif; text-align: left; transition: color .18s, background .18s; }
-.floral-select__option:hover, .floral-select__option:focus-visible { background: var(--color-f9e4ee); color: var(--color-8d315f); }
-.floral-select__option[aria-selected="true"] { background: var(--color-f6dce8); color: var(--color-852955); font-weight: 700; }
-.floral-select__option svg { flex: none; }
-@media (prefers-reduced-motion: reduce) { .floral-select__trigger, .floral-select__trigger svg, .floral-select__option { transition: none; } }
+/*  Rôle : styles de FloralSelect.  */
+/*  Champs de formulaire.  */
+.floral-select {
+  position: relative;
+  min-width: 0;
+}
+/*  Champs de formulaire.  */
+.floral-select__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 16px;
+  border: 1px solid var(--color-e9cbd8);
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--white), var(--color-fff5f8));
+  color: var(--color-492937);
+  font:
+    600 14px/1.3 "DM Sans",
+    sans-serif;
+  text-align: left;
+  box-shadow: 0 5px 15px var(--color-782d540d);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+/*  Champs de formulaire.  */
+.floral-select__trigger:hover,
+.floral-select.is-open .floral-select__trigger {
+  border-color: var(--color-b44c82);
+  box-shadow: 0 8px 22px var(--color-a83a7524);
+}
+/*  Champs de formulaire.  */
+.floral-select__trigger svg {
+  flex: none;
+  color: var(--color-a83a75);
+  transition: transform 0.2s;
+}
+/*  Champs de formulaire.  */
+.floral-select.is-open .floral-select__trigger svg {
+  transform: rotate(180deg);
+}
+/*  Champs de formulaire.  */
+.floral-select__options {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  display: grid;
+  gap: 3px;
+  max-height: 260px;
+  padding: 7px;
+  overflow-y: auto;
+  border: 1px solid var(--color-e9cbd8);
+  border-radius: 17px;
+  background: var(--color-fffafc);
+  box-shadow: 0 18px 40px var(--color-50223a2b);
+}
+/*  Champs de formulaire.  */
+.floral-select__option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 41px;
+  padding: 9px 11px;
+  border-radius: 10px;
+  background: var(--transparent);
+  color: var(--color-573443);
+  font:
+    500 14px/1.3 "DM Sans",
+    sans-serif;
+  text-align: left;
+  transition:
+    color 0.18s,
+    background 0.18s;
+}
+/*  Champs de formulaire.  */
+.floral-select__option:hover,
+.floral-select__option:focus-visible {
+  background: var(--color-f9e4ee);
+  color: var(--color-8d315f);
+}
+/*  Champs de formulaire.  */
+.floral-select__option[aria-selected="true"] {
+  background: var(--color-f6dce8);
+  color: var(--color-852955);
+  font-weight: 700;
+}
+/*  Champs de formulaire.  */
+.floral-select__option svg {
+  flex: none;
+}
+/*  Adaptation responsive.  */
+@media (prefers-reduced-motion: reduce) {
+  .floral-select__trigger,
+  .floral-select__trigger svg,
+  .floral-select__option {
+    transition: none;
+  }
+}

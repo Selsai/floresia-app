@@ -1,4 +1,5 @@
-﻿import { writeFile } from 'node:fs/promises';
+// Rôle : Script utilitaire du build Florésia.
+import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { loadEnv } from 'vite';
 

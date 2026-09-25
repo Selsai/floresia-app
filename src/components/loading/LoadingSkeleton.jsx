@@ -1,3 +1,4 @@
+// Rôle : Composant réutilisable de l’interface.
 // LoadingSkeleton : espaces reserves pendant le chargement.
 import './LoadingSkeleton.css';
 

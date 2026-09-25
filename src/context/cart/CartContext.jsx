@@ -1,3 +1,4 @@
+// Rôle : État partagé de l’application.
 // CartContext : etat du panier.
 import { useState, useEffect, useCallback } from 'react';
 

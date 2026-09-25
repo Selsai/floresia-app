@@ -1,3 +1,4 @@
+// Rôle : Composant réutilisable de l’interface.
 // Footer : liens et informations de bas de page.
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Mail } from 'lucide-react';

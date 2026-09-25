@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // InformationPages : pages de contact et de politique du site.
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Mail } from 'lucide-react';

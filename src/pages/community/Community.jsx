@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // Community : galerie et temoignages.
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';

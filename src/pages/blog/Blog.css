@@ -1,6 +1,10 @@
+/*  Rôle : styles de Blog.  */
+
 /* ══════════════════════════════════════
    PAGE BLOG — Floresia
 ══════════════════════════════════════ */
+
+/*  Styles de .blog.  */
 
 .blog {
   min-height: 100vh;
@@ -11,18 +15,56 @@
    HEADER
 ══════════════════════════════════════ */
 
+/*  En-têtes et titres.  */
+
 .blog-header {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(125deg, var(--color-fff5f8) 0%, var(--color-fcecf1) 58%, var(--color-fff9f8) 100%);
+  background: linear-gradient(
+    125deg,
+    var(--color-fff5f8) 0%,
+    var(--color-fcecf1) 58%,
+    var(--color-fff9f8) 100%
+  );
   padding: clamp(42px, 5vw, 68px) 0;
   border-bottom: 1px solid var(--border);
   text-align: left;
 }
-.blog-header .container { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .82fr); align-items: center; gap: clamp(32px, 6vw, 90px); }
-.blog-header-copy::before { content: 'FLORÉSIA · LE JOURNAL'; display: block; margin-bottom: 18px; color: var(--color-a94778); font-size: 11px; font-weight: 800; letter-spacing: .2em; }
-.blog-header-visual { overflow: hidden; height: clamp(260px, 25vw, 380px); border-radius: 48% 48% 18px 18px; box-shadow: 0 24px 46px var(--alpha-3b5ec7d5); }
-.blog-header-visual img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
+/*  En-têtes et titres.  */
+.blog-header .container {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
+  align-items: center;
+  gap: clamp(32px, 6vw, 90px);
+}
+/*  En-têtes et titres.  */
+.blog-header-copy::before {
+  content: "FLORÉSIA · LE JOURNAL";
+  display: block;
+  margin-bottom: 18px;
+  color: var(--color-a94778);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+/*  En-têtes et titres.  */
+.blog-header-visual {
+  overflow: hidden;
+  height: clamp(260px, 25vw, 380px);
+  border-radius: 48% 48% 18px 18px;
+  box-shadow: 0 24px 46px var(--alpha-3b5ec7d5);
+}
+/*  En-têtes et titres.  */
+.blog-header-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 60%;
+}
+
+/*  Navigation.  */
 
 .blog .breadcrumb {
   font-size: 13px;
@@ -30,28 +72,38 @@
   margin-bottom: 16px;
 }
 
+/*  Navigation.  */
+
 .blog .breadcrumb a {
   color: var(--text-mid);
   transition: color 0.2s;
 }
 
+/*  Navigation.  */
+
 .blog .breadcrumb a:hover {
   color: var(--pink);
 }
+
+/*  Navigation.  */
 
 .blog .breadcrumb span {
   color: var(--pink);
   font-weight: 600;
 }
 
+/*  En-têtes et titres.  */
+
 .blog-title {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 48px;
   font-weight: 900;
   color: var(--pink);
   margin-bottom: 12px;
   line-height: 1.1;
 }
+
+/*  En-têtes et titres.  */
 
 .blog-subtitle {
   font-size: 16px;
@@ -64,11 +116,15 @@
    SEARCH & FILTERS
 ══════════════════════════════════════ */
 
+/*  Structure de la page.  */
+
 .blog-filters-section {
   background: var(--white);
   padding: 32px 0;
   border-bottom: 1px solid var(--border);
 }
+
+/*  Structure de la page.  */
 
 .blog-filters-section .container {
   display: flex;
@@ -76,12 +132,16 @@
   gap: 20px;
 }
 
+/*  Styles de .blog .search-bar.  */
+
 .blog .search-bar {
   position: relative;
   max-width: 500px;
   margin: 0 auto;
   width: 100%;
 }
+
+/*  Styles de .blog .search-icon.  */
 
 .blog .search-icon {
   position: absolute;
@@ -91,6 +151,8 @@
   color: var(--text-light);
   font-size: 18px;
 }
+
+/*  Champs de formulaire.  */
 
 .blog .search-bar input {
   width: 100%;
@@ -103,10 +165,14 @@
   background: var(--beige);
 }
 
+/*  Champs de formulaire.  */
+
 .blog .search-bar input:focus {
   border-color: var(--pink);
   background: var(--white);
 }
+
+/*  Styles de .category-filters.  */
 
 .category-filters {
   display: flex;
@@ -114,6 +180,8 @@
   justify-content: center;
   flex-wrap: wrap;
 }
+
+/*  Boutons et actions.  */
 
 .category-btn {
   padding: 10px 24px;
@@ -127,10 +195,14 @@
   cursor: pointer;
 }
 
+/*  Boutons et actions.  */
+
 .category-btn:hover {
   border-color: var(--pink);
   color: var(--pink);
 }
+
+/*  Boutons et actions.  */
 
 .category-btn.active {
   background: var(--pink);
@@ -142,22 +214,51 @@
    LAYOUT PRINCIPAL
 ══════════════════════════════════════ */
 
+/*  Structure de la page.  */
+
 .blog-layout {
   padding: 48px 0;
 }
+
+/*  Structure de la page.  */
 
 .blog-grid-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 310px);
   gap: clamp(24px, 3.5vw, 48px);
 }
+/*  Cartes et listes.  */
 .blog .featured-article,
 .blog .article-card,
-.blog .sidebar-widget { box-shadow: 0 18px 38px var(--alpha-b6398f68); }
-.blog .category-tag { display: inline-flex; width: fit-content; align-items: center; justify-content: center; line-height: 1.15; white-space: nowrap; }
-.blog .article-card .article-content { display: flex; flex-direction: column; min-height: 234px; }
-.blog .article-card .article-footer { margin-top: auto; padding-top: 8px; }
-.blog .article-card .article-image img { display: block; }
+.blog .sidebar-widget {
+  box-shadow: 0 18px 38px var(--alpha-b6398f68);
+}
+/*  Styles de .blog .category-tag.  */
+.blog .category-tag {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+/*  Cartes et listes.  */
+.blog .article-card .article-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 234px;
+}
+/*  Cartes et listes.  */
+.blog .article-card .article-footer {
+  margin-top: auto;
+  padding-top: 8px;
+}
+/*  Cartes et listes.  */
+.blog .article-card .article-image img {
+  display: block;
+}
+
+/*  Cartes et listes.  */
 
 .blog-main,
 .blog-sidebar,
@@ -170,6 +271,8 @@
    ARTICLE VEDETTE
 ══════════════════════════════════════ */
 
+/*  Styles de .featured-article.  */
+
 .featured-article {
   background: var(--white);
   border: 2px solid var(--border);
@@ -179,17 +282,23 @@
   transition: all 0.3s;
 }
 
+/*  Styles de .featured-article:hover.  */
+
 .featured-article:hover {
   border-color: var(--pink);
   box-shadow: 0 8px 32px var(--alpha-37c39ff1);
   transform: translateY(-4px);
 }
 
+/*  Images et illustrations.  */
+
 .featured-image {
   position: relative;
   aspect-ratio: 16 / 9;
   overflow: hidden;
 }
+
+/*  Images et illustrations.  */
 
 .featured-image img {
   width: 100%;
@@ -198,9 +307,13 @@
   transition: transform 0.4s;
 }
 
+/*  Images et illustrations.  */
+
 .featured-article:hover .featured-image img {
   transform: scale(1.05);
 }
+
+/*  Styles de .featured-badge.  */
 
 .featured-badge {
   position: absolute;
@@ -216,9 +329,13 @@
   letter-spacing: 0.05em;
 }
 
+/*  Styles de .featured-content.  */
+
 .featured-content {
   padding: 32px;
 }
+
+/*  Styles de .article-meta.  */
 
 .article-meta {
   display: flex;
@@ -227,6 +344,8 @@
   flex-wrap: wrap;
   margin-bottom: 16px;
 }
+
+/*  Styles de .category-tag.  */
 
 .category-tag {
   background: var(--pink-light);
@@ -239,6 +358,8 @@
   letter-spacing: 0.05em;
 }
 
+/*  Styles de .date.  */
+
 .date,
 .read-time {
   display: flex;
@@ -248,8 +369,10 @@
   color: var(--text-mid);
 }
 
+/*  En-têtes et titres.  */
+
 .featured-title {
-  font-family: 'Playfair Display', serif;
+  font-family: "Playfair Display", serif;
   font-size: 32px;
   font-weight: 700;
   color: var(--text-dark);
@@ -257,12 +380,16 @@
   line-height: 1.3;
 }
 
+/*  Styles de .featured-excerpt.  */
+
 .featured-excerpt {
   font-size: 16px;
   color: var(--text-mid);
   line-height: 1.7;
   margin-bottom: 24px;
 }
+
+/*  Styles de .featured-footer.  */
 
 .featured-footer {
   display: flex;
@@ -272,11 +399,15 @@
   flex-wrap: wrap;
 }
 
+/*  Styles de .author.  */
+
 .author {
   font-size: 14px;
   color: var(--text-mid);
   font-weight: 500;
 }
+
+/*  Boutons et actions.  */
 
 .read-more-btn {
   display: inline-flex;
@@ -291,6 +422,8 @@
   transition: all 0.2s;
 }
 
+/*  Boutons et actions.  */
+
 .read-more-btn:hover {
   background: var(--pink-dark);
   gap: 12px;
@@ -300,11 +433,15 @@
    GRILLE D'ARTICLES
 ══════════════════════════════════════ */
 
+/*  Structure de la page.  */
+
 .articles-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
+
+/*  Cartes et listes.  */
 
 .article-card {
   background: var(--white);
@@ -314,11 +451,15 @@
   transition: all 0.3s;
 }
 
+/*  Cartes et listes.  */
+
 .article-card:hover {
   border-color: var(--pink);
   box-shadow: 0 8px 32px var(--alpha-37c39ff1);
   transform: translateY(-4px);
 }
+
+/*  Images et illustrations.  */
 
 .article-image {
   position: relative;
@@ -327,6 +468,8 @@
   overflow: hidden;
 }
 
+/*  Images et illustrations.  */
+
 .article-image img {
   width: 100%;
   height: 100%;
@@ -334,9 +477,13 @@
   transition: transform 0.4s;
 }
 
+/*  Cartes et listes.  */
+
 .article-card:hover .article-image img {
   transform: scale(1.05);
 }
+
+/*  Images et illustrations.  */
 
 .article-image .category-tag {
   position: absolute;
@@ -344,9 +491,13 @@
   left: 16px;
 }
 
+/*  Cartes et listes.  */
+
 .blog .article-card .article-content {
   padding: 20px;
 }
+
+/*  Styles de .article-meta-small.  */
 
 .article-meta-small {
   display: flex;
@@ -356,11 +507,15 @@
   margin-bottom: 12px;
 }
 
+/*  Styles de .article-meta-small span.  */
+
 .article-meta-small span {
   display: flex;
   align-items: center;
   gap: 4px;
 }
+
+/*  En-têtes et titres.  */
 
 .article-title {
   font-size: 18px;
@@ -375,9 +530,13 @@
   overflow: hidden;
 }
 
+/*  En-têtes et titres.  */
+
 .article-card a:hover .article-title {
   color: var(--pink);
 }
+
+/*  Styles de .article-excerpt.  */
 
 .article-excerpt {
   font-size: 14px;
@@ -390,6 +549,8 @@
   overflow: hidden;
 }
 
+/*  Styles de .article-footer.  */
+
 .article-footer {
   display: flex;
   justify-content: space-between;
@@ -398,10 +559,14 @@
   flex-wrap: wrap;
 }
 
+/*  Styles de .author-small.  */
+
 .author-small {
   font-size: 13px;
   color: var(--text-light);
 }
+
+/*  Styles de .read-link.  */
 
 .read-link {
   display: inline-flex;
@@ -413,9 +578,13 @@
   transition: gap 0.2s;
 }
 
+/*  Styles de .read-link:hover.  */
+
 .read-link:hover {
   gap: 10px;
 }
+
+/*  Styles de .no-articles.  */
 
 .no-articles {
   text-align: center;
@@ -423,10 +592,14 @@
   color: var(--text-mid);
 }
 
+/*  Styles de .no-articles p.  */
+
 .no-articles p {
   font-size: 18px;
   margin-bottom: 20px;
 }
+
+/*  Styles de .reset-search.  */
 
 .reset-search {
   display: inline-block;
@@ -441,6 +614,8 @@
   transition: all 0.2s;
 }
 
+/*  Styles de .reset-search:hover.  */
+
 .reset-search:hover {
   background: var(--pink-dark);
   transform: translateY(-2px);
@@ -450,11 +625,15 @@
    SIDEBAR
 ══════════════════════════════════════ */
 
+/*  Styles de .blog-sidebar.  */
+
 .blog-sidebar {
   display: flex;
   flex-direction: column;
   gap: 32px;
 }
+
+/*  Styles de .blog .sidebar-widget.  */
 
 .blog .sidebar-widget {
   background: var(--white);
@@ -462,6 +641,8 @@
   border-radius: 16px;
   padding: 24px;
 }
+
+/*  En-têtes et titres.  */
 
 .widget-title {
   font-size: 18px;
@@ -473,11 +654,14 @@
 }
 
 /* Articles populaires */
+/*  Styles de .popular-articles.  */
 .popular-articles {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
+
+/*  Styles de .popular-article.  */
 
 .popular-article {
   display: grid;
@@ -488,9 +672,13 @@
   transition: background 0.2s;
 }
 
+/*  Styles de .popular-article:hover.  */
+
 .popular-article:hover {
   background: var(--pink-light);
 }
+
+/*  Styles de .popular-article img.  */
 
 .popular-article img {
   width: 80px;
@@ -499,11 +687,15 @@
   border-radius: 8px;
 }
 
+/*  Styles de .popular-content.  */
+
 .popular-content {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
+
+/*  Styles de .popular-category.  */
 
 .popular-category {
   font-size: 11px;
@@ -511,6 +703,8 @@
   color: var(--pink);
   text-transform: uppercase;
 }
+
+/*  Styles de .popular-article h4.  */
 
 .popular-article h4 {
   font-size: 14px;
@@ -524,9 +718,13 @@
   transition: color 0.2s;
 }
 
+/*  Styles de .popular-article:hover h4.  */
+
 .popular-article:hover h4 {
   color: var(--pink);
 }
+
+/*  Styles de .popular-date.  */
 
 .popular-date {
   font-size: 12px;
@@ -534,11 +732,14 @@
 }
 
 /* Catégories */
+/*  Cartes et listes.  */
 .categories-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
+
+/*  Cartes et listes.  */
 
 .category-item {
   display: flex;
@@ -555,10 +756,14 @@
   transition: all 0.2s;
 }
 
+/*  Cartes et listes.  */
+
 .category-item:hover {
   background: var(--pink-light);
   color: var(--pink);
 }
+
+/*  Cartes et listes.  */
 
 .category-item .count {
   margin-left: auto;
@@ -571,9 +776,16 @@
 }
 
 /* Newsletter widget */
+/*  Styles de .newsletter-widget.  */
 .newsletter-widget {
-  background: linear-gradient(135deg, var(--pink-light) 0%, var(--color-fdf2f6) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--pink-light) 0%,
+    var(--color-fdf2f6) 100%
+  );
 }
+
+/*  Styles de .newsletter-widget p.  */
 
 .newsletter-widget p {
   font-size: 14px;
@@ -582,11 +794,15 @@
   margin-bottom: 16px;
 }
 
+/*  Champs de formulaire.  */
+
 .blog .newsletter-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+
+/*  Champs de formulaire.  */
 
 .blog .newsletter-form input {
   padding: 12px 16px;
@@ -597,9 +813,13 @@
   transition: border-color 0.2s;
 }
 
+/*  Champs de formulaire.  */
+
 .blog .newsletter-form input:focus {
   border-color: var(--pink);
 }
+
+/*  Boutons et actions.  */
 
 .blog .newsletter-form button {
   padding: 12px;
@@ -613,9 +833,13 @@
   transition: all 0.2s;
 }
 
+/*  Boutons et actions.  */
+
 .blog .newsletter-form button:hover {
   background: var(--pink-dark);
 }
+
+/*  Styles de .blog .newsletter-disclaimer.  */
 
 .blog .newsletter-disclaimer {
   font-size: 11px;
@@ -627,6 +851,8 @@
 /* ══════════════════════════════════════
    RESPONSIVE
 ══════════════════════════════════════ */
+
+/*  Adaptation responsive.  */
 
 @media (max-width: 968px) {
   .blog-grid-layout {
@@ -642,21 +868,62 @@
   }
 }
 
+/*  Adaptation responsive.  */
+
 @media (max-width: 640px) {
-  .blog-header { padding: 38px 0 42px; }
-  .blog-header .container { grid-template-columns: 1fr; gap: 28px; }
-  .blog-header-visual { height: 210px; max-width: 460px; width: 100%; margin-inline: auto; border-radius: 46% 46% 16px 16px; }
-  .blog-title { font-size: clamp(34px, 9vw, 44px); line-height: 1.12; }
-  .blog-subtitle { font-size: 15px; line-height: 1.6; }
-  .blog-filters-section { padding: 24px 0; }
-  .blog-layout { padding: 30px 0 64px; }
-  .featured-content { padding: 24px; }
-  .featured-article { margin-bottom: 30px; }
-  .article-meta { column-gap: 12px; row-gap: 8px; }
-  .featured-footer { align-items: flex-start; flex-direction: column; }
-  .read-more-btn { justify-content: center; width: 100%; }
-  .articles-grid { gap: 20px; }
-  .article-footer { align-items: flex-start; flex-direction: column; }
+  .blog-header {
+    padding: 38px 0 42px;
+  }
+  .blog-header .container {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .blog-header-visual {
+    height: 210px;
+    max-width: 460px;
+    width: 100%;
+    margin-inline: auto;
+    border-radius: 46% 46% 16px 16px;
+  }
+  .blog-title {
+    font-size: clamp(34px, 9vw, 44px);
+    line-height: 1.12;
+  }
+  .blog-subtitle {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .blog-filters-section {
+    padding: 24px 0;
+  }
+  .blog-layout {
+    padding: 30px 0 64px;
+  }
+  .featured-content {
+    padding: 24px;
+  }
+  .featured-article {
+    margin-bottom: 30px;
+  }
+  .article-meta {
+    column-gap: 12px;
+    row-gap: 8px;
+  }
+  .featured-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .read-more-btn {
+    justify-content: center;
+    width: 100%;
+  }
+  .articles-grid {
+    gap: 20px;
+  }
+  .article-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
   .featured-title {
     font-size: 24px;
   }

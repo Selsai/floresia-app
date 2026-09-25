@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // ResetPassword : definition du nouveau mot de passe.
 import { useState } from 'react';
 import { useSearchParams, useNavigate, Link } from 'react-router-dom';

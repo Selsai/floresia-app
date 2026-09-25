@@ -1,3 +1,4 @@
+// Rôle : Composant réutilisable de l’interface.
 // FloralSelect : choix des options florales.
 import { useEffect, useId, useRef, useState } from 'react';
 import { Check, ChevronDown } from 'lucide-react';

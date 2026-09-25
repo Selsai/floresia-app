@@ -1,3 +1,4 @@
+// Rôle : Composant réutilisable de l’interface.
 // PageMeta : titres et descriptions SEO.
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';

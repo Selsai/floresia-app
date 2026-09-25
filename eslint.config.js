@@ -1,3 +1,4 @@
+// Rôle : Configuration ou point d’entrée du front Florésia.
 import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'

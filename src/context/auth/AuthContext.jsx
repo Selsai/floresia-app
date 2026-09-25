@@ -1,3 +1,4 @@
+// Rôle : État partagé de l’application.
 // AuthContext : etat de connexion.
 import { useState, useEffect } from 'react';
 import { authApi } from '../../services/api';

@@ -1,3 +1,4 @@
+// Rôle : Configuration ou point d’entrée du front Florésia.
 // main : fonctionnalite src.
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'

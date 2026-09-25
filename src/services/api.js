@@ -1,3 +1,4 @@
+// Rôle : Communication avec les services externes.
 // Point d'entrée unique pour tous les appels à l'API Florésia
 
 export const API_URL =

@@ -1,3 +1,4 @@
+// Rôle : Composant réutilisable de l’interface.
 // Navbar : navigation principale.
 import { useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';

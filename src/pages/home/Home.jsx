@@ -1,3 +1,4 @@
+// Rôle : Page et interactions de cette fonctionnalité.
 // Home : accueil, inspirations et selections.
 import { formatPrice } from '../../utils/price';
 import { useEffect, useState } from 'react';
