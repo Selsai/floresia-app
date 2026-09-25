@@ -62,9 +62,11 @@
 }
 
 .not-found__code svg {
-  width: clamp(54px, 10vw, 82px);
-  height: clamp(54px, 10vw, 82px);
+  flex: 0 0 auto;
+  width: 0.7em;
+  height: 0.7em;
   color: var(--green);
+  transform: translateY(0.04em);
 }
 
 /*  Message d’aide.  */
@@ -77,11 +79,16 @@
 }
 
 .not-found__message {
-  max-width: 490px;
+  max-width: 510px;
   margin: 0 auto;
-  color: var(--text-mid);
-  font-size: 1rem;
-  line-height: 1.75;
+  padding: 14px 18px;
+  color: var(--text-dark);
+  font-size: 1.02rem;
+  font-weight: 500;
+  line-height: 1.65;
+  border-left: 3px solid var(--green);
+  border-radius: 10px;
+  background: #f6faf4;
 }
 
 /*  Bouton de retour.  */
