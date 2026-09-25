@@ -281,11 +281,13 @@ describe('Flora et récupération de compte', () => {
     expect(await screen.findByText(/Mot de passe réinitialisé avec succès/)).toBeInTheDocument();
   });
   it('filtre le code email et transmet les six chiffres', async () => {
-    const fetchMock = fakeApi({ '/auth/verify-email': {} }); renderPage(VerifyEmail, { state: { email: 'flora@example.test' } });
+    const fetchMock = fakeApi({ '/auth/verify-email': {} });
+    const { auth } = renderPage(VerifyEmail, { state: { email: 'flora@example.test' }, signedIn: true });
     fireEvent.change(screen.getByPlaceholderText('123456'), { target: { value: 'abc123456' } });
     expect(screen.getByPlaceholderText('123456')).toHaveValue('123456');
     fireEvent.click(screen.getByRole('button', { name: 'Valider le code' }));
     expect(await screen.findByText('Email vérifié avec succès !')).toBeInTheDocument();
+    expect(auth.updateUser).toHaveBeenCalledWith({ isEmailVerified: true });
     const call = fetchMock.mock.calls.find(([url]) => new URL(url).pathname === '/auth/verify-email');
     expect(JSON.parse(call[1].body)).toEqual({ email: 'flora@example.test', code: '123456' });
   });

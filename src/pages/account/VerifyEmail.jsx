@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { authApi } from '../../services/api';
+import { useAuth } from '../../context/auth/auth-context';
 import RecoveryHeader from './RecoveryHeader';
 import './ForgotPassword.css';
 
@@ -11,6 +12,7 @@ const CODE_DURATION = 10 * 60; // 10 minutes en secondes
 export default function VerifyEmail() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, updateUser } = useAuth();
   const email = location.state?.email || '';
 
   const [code, setCode] = useState('');
@@ -46,6 +48,10 @@ export default function VerifyEmail() {
 
     try {
       await authApi.verifyEmail({ email, code });
+      // Synchronise immédiatement le badge du profil avec la validation confirmée.
+      if (user?.email?.toLowerCase() === email.toLowerCase()) {
+        updateUser({ isEmailVerified: true });
+      }
       setSuccess('Email vérifié avec succès !');
       setTimeout(() => navigate('/compte'), 1500);
     } catch (err) {
