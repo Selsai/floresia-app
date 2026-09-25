@@ -104,6 +104,7 @@ export default function CustomBouquet() {
   // ── Dérivés ────────────────────────────────────────────────────────────────
 
   const calculatePrice = () => {
+    // Additionne les fleurs et le ruban.
     let p = 0;
     bouquetConfig.selectedFlowers.forEach(f  => { p += f.price * f.quantity; });
     bouquetConfig.secondaryFlowers.forEach(id => {
@@ -143,6 +144,7 @@ export default function CustomBouquet() {
   // ── Navigation ─────────────────────────────────────────────────────────────
 
   const canProceedFromStep = (step) => {
+    // Vérifie les choix requis de l’étape.
     if (step === 1) return bouquetConfig.occasion !== '';
     if (step === 2) return bouquetConfig.selectedFlowers.length > 0;
     return true;
@@ -167,6 +169,7 @@ export default function CustomBouquet() {
   // ── Panier ─────────────────────────────────────────────────────────────────
 
   const addBouquetToCart = () => {
+    // Conserve toute la composition dans le panier.
     const occ = OCCASIONS.find(o => o.id === bouquetConfig.occasion);
     addToCart({
       id:       'custom-' + crypto.randomUUID(),

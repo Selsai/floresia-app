@@ -12,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(Boolean(savedToken));
 
   useEffect(() => {
+    // Restaure la session enregistrée.
     if (!savedToken) return;
 
     authApi
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }) => {
   }, [savedToken]);
 
   const login = async (email, password, rememberMe = true) => {
+    // Choisit un stockage durable ou temporaire.
     try {
       const data = await authApi.login({ email, password });
 
@@ -50,6 +52,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const register = async (userData) => {
+    // Connecte directement le nouveau compte.
     try {
       await authApi.register({
         email: userData.email,
@@ -65,6 +68,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
+    // Efface toutes les traces de session.
     localStorage.removeItem('floresia-token');
     sessionStorage.removeItem('floresia-token');
     setToken(null);

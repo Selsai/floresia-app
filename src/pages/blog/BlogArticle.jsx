@@ -36,6 +36,7 @@ function initials(author) {
 
 // Colore les mentions "@Prénom" dans le texte affiché
 function renderWithMentions(content) {
+  // Met en valeur les mentions @utilisateur.
   const parts = content.split(/(@[A-Za-zÀ-ÿ]+)/g);
 
   return parts.map((part, i) =>
@@ -118,6 +119,7 @@ function CommentForm({
   );
 
   const handleSubmit = async (e) => {
+    // Envoie un commentaire ou une réponse.
     e.preventDefault();
     setError('');
 

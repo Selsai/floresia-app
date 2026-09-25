@@ -18,12 +18,14 @@ export default function FloralSelect({ value, options, onChange, label }) {
   }, [open]);
 
   const choose = (option) => {
+    // Valide une option et ferme la liste.
     onChange(option.value);
     setOpen(false);
     button.current?.focus();
   };
 
   const handleKeyDown = (event) => {
+    // Rend la liste utilisable au clavier.
     if (event.key === 'Escape') { setOpen(false); button.current?.focus(); }
     if (['ArrowDown', 'ArrowUp'].includes(event.key)) {
       event.preventDefault();

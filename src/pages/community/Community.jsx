@@ -185,6 +185,7 @@ export default function Community() {
   };
 
   const handleReviewSubmit = async (e) => {
+    // Envoie un avis pour le compte connecté.
     e.preventDefault();
     setReviewError('');
     setReviewSuccess('');
@@ -216,6 +217,7 @@ export default function Community() {
   };
 
   const handlePhotoSubmit = async (e) => {
+    // Envoie la photo avec ses informations.
     e.preventDefault();
     setPhotoError('');
     setPhotoSuccess('');

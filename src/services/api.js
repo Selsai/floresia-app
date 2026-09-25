@@ -8,6 +8,7 @@ export const API_URL =
 export const CUSTOM_BOUQUET_PRODUCT_ID = 'cmtxj1mhg000c99uhklj59h39';
 
 async function request(path, { method = 'GET', body, token } = {}) {
+  // Prépare une requête JSON commune.
   const headers = {
     'Content-Type': 'application/json',
   };
@@ -188,6 +189,7 @@ export const paymentApi = {
 // par le backend, contrairement aux images statiques du front.
 
 export function resolveUploadUrl(path) {
+  // Complète les chemins des images uploadées.
   if (!path) return null;
 
   return path.startsWith('http')

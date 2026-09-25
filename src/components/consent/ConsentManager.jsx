@@ -5,6 +5,7 @@ import "./ConsentManager.css";
 
 export const CONSENT_KEY = "floresia-consent-v1";
 function readConsent() {
+  // Relit le dernier choix enregistré.
   try {
     return JSON.parse(localStorage.getItem(CONSENT_KEY) || "null");
   } catch {
@@ -12,6 +13,7 @@ function readConsent() {
   }
 }
 function loadAnalytics() {
+  // Charge GA4 uniquement après accord.
   const id = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim();
   if (!id || document.querySelector(`script[data-floresia-ga="${id}"]`)) return;
   window[`ga-disable-${id}`] = false;
@@ -28,6 +30,7 @@ function loadAnalytics() {
   window.gtag("config", id, { anonymize_ip: true });
 }
 function disableAnalytics() {
+  // Bloque les nouvelles mesures Analytics.
   const id = import.meta.env.VITE_GA_MEASUREMENT_ID?.trim();
   if (id) window[`ga-disable-${id}`] = true;
   if (window.gtag)
@@ -49,6 +52,7 @@ export default function ConsentManager() {
     return () => window.removeEventListener("floresia:open-consent", reopen);
   }, []);
   const save = (allowed) => {
+    // Mémorise le choix puis l’applique.
     localStorage.setItem(
       CONSENT_KEY,
       JSON.stringify({

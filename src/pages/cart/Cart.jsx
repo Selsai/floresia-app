@@ -105,10 +105,12 @@ const storesLoading = deliveryMethod === 'PICKUP' && Boolean(selectedAddress?.la
 }, [deliveryMethod, selectedAddress]);
 
   const handleEditCustomBouquet = (item) => {
+    // Rouvre le configurateur avec la composition.
     navigate('/personnaliser', { state: { editMode: true, cartItemId: item.id, config: item.customConfig } });
   };
 
   const handleCheckout = async () => {
+    // Crée la commande avant d’ouvrir Stripe.
     setCheckoutError('');
 
     if (!isAuthenticated) {

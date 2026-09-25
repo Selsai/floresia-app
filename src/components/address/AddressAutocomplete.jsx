@@ -9,6 +9,7 @@ export default function AddressAutocomplete({ onSelect, onClear, initialValue = 
   const [outOfZoneMessage, setOutOfZoneMessage] = useState('');
 
   const handleChange = async (e) => {
+    // Recherche des adresses après la saisie.
     const value = e.target.value;
     setQuery(value);
     onClear?.();
@@ -33,6 +34,7 @@ export default function AddressAutocomplete({ onSelect, onClear, initialValue = 
   };
 
   const handleSelect = (feature) => {
+    // Transmet l’adresse et ses coordonnées.
     const { properties, geometry } = feature;
     const zipCode = properties.postcode;
 
