@@ -1,1 +1,0 @@
-import{j as e,K as o}from"./index-CUora6gM.js";function i({eyebrow:r,title:s,children:a}){return e.jsxs("header",{className:"recovery-header",children:[e.jsx("img",{src:o,alt:"",className:"recovery-logo","aria-hidden":"true"}),e.jsx("p",{className:"recovery-eyebrow",children:r}),e.jsx("h1",{children:s}),a]})}export{i as R};
