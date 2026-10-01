@@ -27,6 +27,7 @@
 .navbar {
   position: relative;
   z-index: 2;
+  background: var(--surface);
   border-bottom: 1px solid var(--alpha-1301d9ed);
 }
 
