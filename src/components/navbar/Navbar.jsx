@@ -27,6 +27,14 @@ export default function Navbar() {
   return (
     <header className="site-header">
       <div className="site-header__note">Un jardin d'idées, imaginé avec passion</div>
+      {menuOpen && (
+        <button
+          type="button"
+          className="nav-menu-backdrop"
+          aria-label="Fermer le menu"
+          onClick={closeMenu}
+        />
+      )}
       <nav className="navbar" aria-label="Navigation principale" onKeyDown={(event) => {
         if (event.key === 'Escape') closeMenu();
       }}>

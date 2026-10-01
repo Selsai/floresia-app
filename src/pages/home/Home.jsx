@@ -7,6 +7,7 @@ import { ArrowRight, ArrowUpRight, Flower2, Sparkles } from 'lucide-react';
 import { productsApi, articlesApi, CUSTOM_BOUQUET_PRODUCT_ID } from '../../services/api';
 import { ProductGridSkeleton, ArticleGridSkeleton } from '../../components/loading/LoadingSkeleton';
 import './Home.css';
+import { articlePath, productPath } from '../../utils/slug';
 
 const occasions = [
   { label: 'Tous', category: null },
@@ -79,7 +80,7 @@ export default function Home() {
           {!productsLoading && !productsError && <div className="home-products-grid">
             {visibleProducts.map((product) => (
               <article key={product.id} className="home-product-card">
-                <Link to={`/produit/${product.id}`} className="home-product-card__link">
+                <Link to={productPath(product)} className="home-product-card__link">
                   <div className="home-product-image-wrap"><img src={product.imageUrl} alt={product.name} className="home-product-image" loading="lazy" onLoad={(event) => event.currentTarget.classList.add('is-loaded')} onError={(event) => event.currentTarget.classList.add('is-loaded')} /></div>
                   <div className="home-product-body"><span className="home-product-kicker">Création Florésia</span><h3 className="home-product-name">{product.name}</h3><div className="home-product-footer"><span className="home-product-price">{formatPrice(product.price)}</span><span className="home-product-arrow"><ArrowUpRight size={20} aria-hidden="true" /></span></div></div>
                 </Link>
@@ -106,7 +107,7 @@ export default function Home() {
       <section className="blog-section" aria-labelledby="home-blog-title">
         <div className="container">
           <div className="section-heading"><div><p className="section-eyebrow">À feuilleter</p><h2 id="home-blog-title" className="home-section-title">Le journal floral</h2><p className="home-section-sub">Des idées, des gestes et des histoires à partager.</p></div><Link to="/blog" className="section-more">Tous les articles <ArrowUpRight size={18} aria-hidden="true" /></Link></div>
-          {articlesLoading ? <ArticleGridSkeleton count={3} /> : blogPosts.length > 0 ? <div className="home-blog-grid">{blogPosts.map((post) => <article key={post.id} className="home-blog-card"><span className="home-blog-category">{post.category}</span><h3 className="home-blog-title">{post.title}</h3><p className="home-blog-excerpt">{post.excerpt}</p><Link to={`/blog/${post.id}`} className="home-blog-link">Lire l'article <ArrowRight size={17} aria-hidden="true" /></Link></article>)}</div> : <p className="collection-state">Les prochains articles apparaîtront ici. <Link to="/blog">Explorer le journal</Link></p>}
+          {articlesLoading ? <ArticleGridSkeleton count={3} /> : blogPosts.length > 0 ? <div className="home-blog-grid">{blogPosts.map((post) => <article key={post.id} className="home-blog-card"><span className="home-blog-category">{post.category}</span><h3 className="home-blog-title">{post.title}</h3><p className="home-blog-excerpt">{post.excerpt}</p><Link to={articlePath(post)} className="home-blog-link">Lire l'article <ArrowRight size={17} aria-hidden="true" /></Link></article>)}</div> : <p className="collection-state">Les prochains articles apparaîtront ici. <Link to="/blog">Explorer le journal</Link></p>}
         </div>
       </section>
       <section className="closing-section"><div className="container closing-content"><div><p className="section-eyebrow">Envie d'essayer ?</p><h2>La prochaine création commence avec vous.</h2></div><Link to="/personnaliser">Entrer dans l'atelier <ArrowUpRight size={19} aria-hidden="true" /></Link></div></section>

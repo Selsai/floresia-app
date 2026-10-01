@@ -27,6 +27,14 @@
   --border: #efd8e2;
 }
 
+@media (max-width: 768px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
 /* Reset CSS basique */
 /*  Styles de *.  */
 * {

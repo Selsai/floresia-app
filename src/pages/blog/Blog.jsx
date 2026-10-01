@@ -7,6 +7,7 @@ import { articlesApi } from '../../services/api';
 import { ArticleGridSkeleton } from '../../components/loading/LoadingSkeleton';
 import journalHero from '../../assets/blog/img-journal-blog.png';
 import './Blog.css';
+import { articlePath } from '../../utils/slug';
 
 function formatArticleDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('fr-FR', {
@@ -116,7 +117,7 @@ export default function Blog() {
                       <p className="featured-excerpt">{filteredArticles[0].excerpt}</p>
                       <div className="featured-footer">
                         <span className="author">Par {filteredArticles[0].displayAuthorName}</span>
-                        <Link to={`/blog/${filteredArticles[0].id}`} className="read-more-btn">
+                        <Link to={articlePath(filteredArticles[0])} className="read-more-btn">
                           Lire l'article <FiArrowRight />
                         </Link>
                       </div>
@@ -127,7 +128,7 @@ export default function Blog() {
                 <div className="articles-grid">
                   {filteredArticles.slice(selectedCategory === 'Tous' ? 1 : 0).map((article) => (
                     <article key={article.id} className="article-card">
-                      <Link to={`/blog/${article.id}`} className="article-image">
+                      <Link to={articlePath(article)} className="article-image">
                         <img src={article.imageUrl} alt={article.title} />
                         <span className="category-tag">{article.category}</span>
                       </Link>
@@ -136,13 +137,13 @@ export default function Blog() {
                           <span><FiCalendar size={12} /> {formatArticleDate(article.createdAt)}</span>
                           <span><FiClock size={12} /> {article.readTime}</span>
                         </div>
-                        <Link to={`/blog/${article.id}`}>
+                        <Link to={articlePath(article)}>
                           <h3 className="article-title">{article.title}</h3>
                         </Link>
                         <p className="article-excerpt">{article.excerpt}</p>
                         <div className="article-footer">
                           <span className="author-small">Par {article.displayAuthorName}</span>
-                          <Link to={`/blog/${article.id}`} className="read-link">
+                          <Link to={articlePath(article)} className="read-link">
                             Lire <FiArrowRight size={14} />
                           </Link>
                         </div>
@@ -166,7 +167,7 @@ export default function Blog() {
                   <h3 className="widget-title">Articles populaires</h3>
                   <div className="popular-articles">
                     {popularArticles.map((article) => (
-                      <Link to={`/blog/${article.id}`} key={article.id} className="popular-article">
+                      <Link to={articlePath(article)} key={article.id} className="popular-article">
                         <img src={article.imageUrl} alt={article.title} />
                         <div className="popular-content">
                           <span className="popular-category">{article.category}</span>

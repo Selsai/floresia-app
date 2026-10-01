@@ -13,6 +13,8 @@ import {
   CUSTOM_BOUQUET_PRODUCT_ID,
 } from '../../services/api';
 import { DetailSkeleton } from '../../components/loading/LoadingSkeleton';
+import NotFound from '../not-found/NotFound';
+import { matchesSlugOrId, productPath } from '../../utils/slug';
 import './ProductDetail.css';
 import { updateDetailMeta } from '../../components/meta/detail-meta';
 
@@ -27,7 +29,7 @@ const CATEGORY_LABELS = {
 };
 
 export default function ProductDetail() {
-  const { id } = useParams();
+  const { id: routeValue } = useParams();
   const navigate = useNavigate();
 
   const { addToCart } = useCart();
@@ -43,18 +45,20 @@ export default function ProductDetail() {
   const [favLoading, setFavLoading] = useState(false);
 
   useEffect(() => {
-    if (id === CUSTOM_BOUQUET_PRODUCT_ID) {
-
-
-      return;
-    }
-
     productsApi
-      .getOne(id)
-      .then(setProduct)
+      .list()
+      .then((products) => {
+        const found = products.find((item) =>
+          matchesSlugOrId(item, routeValue, 'name')
+        );
+        setProduct(found || null);
+        if (found && routeValue === found.id) {
+          navigate(productPath(found), { replace: true });
+        }
+      })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [navigate, routeValue]);
 
   useEffect(() => {
     if (!isAuthenticated || !token || !product) {
@@ -70,31 +74,26 @@ export default function ProductDetail() {
   }, [isAuthenticated, token, product]);
 
   useEffect(() => {
-    if (loading && id !== CUSTOM_BOUQUET_PRODUCT_ID) return;
-    const found = product && !error && id !== CUSTOM_BOUQUET_PRODUCT_ID;
+    if (loading && routeValue !== CUSTOM_BOUQUET_PRODUCT_ID) return;
+    const found = product && !error && routeValue !== CUSTOM_BOUQUET_PRODUCT_ID;
     updateDetailMeta({
-      path: `/produit/${encodeURIComponent(id)}`,
+      path: found ? productPath(product) : `/produit/${encodeURIComponent(routeValue)}`,
       title: found ? `${product.name} | Florésia` : 'Produit introuvable | Florésia',
       description: found ? (product.description || `Découvrez ${product.name} dans le catalogue de démonstration Florésia.`).slice(0, 160) : 'Cette fiche produit est introuvable.',
       image: found ? product.imageUrl : undefined,
       indexable: Boolean(found),
       type: 'product',
     });
-  }, [id, product, loading, error]);
+  }, [routeValue, product, loading, error]);
 
-  if (loading && id !== CUSTOM_BOUQUET_PRODUCT_ID) {
+  if (loading && routeValue !== CUSTOM_BOUQUET_PRODUCT_ID) {
     return (
       <DetailSkeleton />
     );
   }
 
-  if (error || !product || id === CUSTOM_BOUQUET_PRODUCT_ID) {
-    return (
-      <div className="product-not-found">
-        <h1>Produit introuvable</h1>
-        <Link to="/boutique">Retour à la boutique</Link>
-      </div>
-    );
+  if (error || !product || routeValue === CUSTOM_BOUQUET_PRODUCT_ID) {
+    return <NotFound />;
   }
 
   const handleAddToCart = () => {

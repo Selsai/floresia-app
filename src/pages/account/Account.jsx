@@ -16,6 +16,7 @@ import {
 } from '../../services/api';
 import AddressAutocomplete from '../../components/address/AddressAutocomplete';
 import './Account.css';
+import { productPath } from '../../utils/slug';
 
 const EMPTY_ADDRESS_FORM = {
   label: '',
@@ -430,6 +431,11 @@ export default function Account() {
         'Numéro de téléphone français invalide (ex: 06 12 34 56 78).';
     }
 
+    if (!PASSWORD_RULES.test(signupData.password)) {
+      errors.password =
+        'Le mot de passe doit contenir au moins 12 caractères, une majuscule, un chiffre et un caractère spécial.';
+    }
+
     if (signupData.password !== signupData.confirmPassword) {
       errors.confirmPassword =
         'Les mots de passe ne correspondent pas.';
@@ -660,8 +666,14 @@ export default function Account() {
                 <input
                   type={showSignupPassword ? 'text' : 'password'}
                   placeholder="••••••••"
+                  minLength={12}
+                  aria-describedby="signup-password-help"
+                  className={signupErrors.password ? 'input-error' : ''}
                   value={signupData.password}
-                  onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
+                  onChange={(e) => {
+                    setSignupData({ ...signupData, password: e.target.value });
+                    if (signupErrors.password) setSignupErrors({ ...signupErrors, password: '' });
+                  }}
                   required
                 />
                 <button
@@ -672,6 +684,9 @@ export default function Account() {
                   {showSignupPassword ? <FiEyeOff /> : <FiEye />}
                 </button>
               </div>
+              <p id="signup-password-help" className={signupErrors.password ? 'field-error' : 'form-help'}>
+                {signupErrors.password || '12 caractères minimum, avec une majuscule, un chiffre et un caractère spécial.'}
+              </p>
             </div>
 
             <div className="form-group">
@@ -681,6 +696,7 @@ export default function Account() {
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="••••••••"
+                  minLength={12}
                   className={signupErrors.confirmPassword ? 'input-error' : ''}
                   value={signupData.confirmPassword}
                   onChange={(e) => {
@@ -1311,7 +1327,7 @@ export default function Account() {
                       </button>
 
                       <Link
-                        to={`/produit/${favorite.productId}`}
+                        to={productPath(favorite.product)}
                       >
                         <img
                           src={favorite.product.imageUrl}

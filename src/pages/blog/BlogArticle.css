@@ -269,6 +269,10 @@
   flex-wrap: wrap;
   margin-top: 18px;
 }
+
+.comment-actions + .comment-form {
+  margin-top: 16px;
+}
 /*  Boutons et actions.  */
 .comment-action-btn {
   display: inline-flex;
@@ -764,6 +768,40 @@
 @media (prefers-reduced-motion: reduce) {
   .comment-action-btn {
     transition: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .comment {
+    display: block;
+    padding: 16px;
+  }
+
+  .comment-avatar {
+    width: 34px;
+    height: 34px;
+    margin-bottom: 10px;
+  }
+
+  .comment-replies {
+    padding-left: 8px;
+  }
+
+  .comment-form {
+    padding: 16px;
+  }
+
+  .comment-form-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+
+  .comment-form-buttons button {
+    width: 100%;
+    min-width: 0;
+    padding: 12px 14px;
+    white-space: nowrap;
   }
 }
 

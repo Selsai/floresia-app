@@ -309,6 +309,9 @@
   .chat-message {
     max-width: 88%;
   }
+  .chat-input-bar input {
+    font-size: 16px;
+  }
 }
 
 /*  Styles de .chat-suggestions.  */

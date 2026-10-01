@@ -2,7 +2,7 @@
 // BlogArticle : lecture des articles et commentaires.
 import { useState, useEffect, useCallback } from 'react';
 
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 
 import { CalendarDays as FiCalendar, Clock3 as FiClock, User as FiUser, ArrowLeft as FiArrowLeft, ArrowRight as FiArrowRight, MessageCircle as FiMessageCircle, Image as FiImage, X as FiX, Trash2 as FiTrash2, CornerDownRight as FiCornerDownRight, Send as FiSend } from 'lucide-react';
 
@@ -18,6 +18,8 @@ import { useConfirm } from '../../context/confirm/confirm-context';
 import { DetailSkeleton } from '../../components/loading/LoadingSkeleton';
 import './BlogArticle.css';
 import { updateDetailMeta } from '../../components/meta/detail-meta';
+import NotFound from '../not-found/NotFound';
+import { articlePath, matchesSlugOrId } from '../../utils/slug';
 
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('fr-FR', {
@@ -354,7 +356,8 @@ function CommentItem({
 }
 
 export default function BlogArticle() {
-  const { id } = useParams();
+  const { id: routeValue } = useParams();
+  const navigate = useNavigate();
 
   const { user, token, isAuthenticated } = useAuth();
 
@@ -369,40 +372,53 @@ export default function BlogArticle() {
   useEffect(() => {
     articlesApi
       .list()
-      .then(setArticles)
+      .then((items) => {
+        setArticles(items);
+        const found = items.find((item) =>
+          matchesSlugOrId(item, routeValue, 'title')
+        );
+        if (found && routeValue === found.id) {
+          navigate(articlePath(found), { replace: true });
+        }
+      })
       .finally(() => setLoading(false));
-  }, []);
+  }, [navigate, routeValue]);
+
+  const article = articles.find((item) =>
+    matchesSlugOrId(item, routeValue, 'title')
+  );
+  const articleId = article?.id;
 
   const loadComments = useCallback(() => {
-
+    if (!articleId) return;
     commentsApi
-      .listByArticle(id)
+      .listByArticle(articleId)
       .then(setComments)
       .catch(() => setComments([]))
       .finally(() => setCommentsLoading(false));
-  }, [id]);
+  }, [articleId]);
 
   useEffect(() => {
+    if (!articleId) return;
     loadComments();
 
     commentsApi
-      .listCommenters(id)
+      .listCommenters(articleId)
       .then(setCommenters)
       .catch(() => {});
-  }, [id, loadComments]);
+  }, [articleId, loadComments]);
 
   useEffect(() => {
     if (loading) return;
-    const currentArticle = articles.find((item) => item.id === id);
     updateDetailMeta({
-      path: `/blog/${encodeURIComponent(id)}`,
-      title: currentArticle ? `${currentArticle.title} | Florésia` : 'Article introuvable | Florésia',
-      description: currentArticle ? (currentArticle.excerpt || `Lisez ${currentArticle.title} sur le blog Florésia.`).slice(0, 160) : 'Cet article est introuvable.',
-      image: currentArticle?.imageUrl,
-      indexable: Boolean(currentArticle),
+      path: article ? articlePath(article) : `/blog/${encodeURIComponent(routeValue)}`,
+      title: article ? `${article.title} | Florésia` : 'Article introuvable | Florésia',
+      description: article ? (article.excerpt || `Lisez ${article.title} sur le blog Florésia.`).slice(0, 160) : 'Cet article est introuvable.',
+      image: article?.imageUrl,
+      indexable: Boolean(article),
       type: 'article',
     });
-  }, [articles, id, loading]);
+  }, [article, loading, routeValue]);
 
   if (loading) {
     return (
@@ -410,20 +426,8 @@ export default function BlogArticle() {
     );
   }
 
-  const article = articles.find((a) => a.id === id);
-
   if (!article) {
-    return (
-      <div className="article-not-found">
-        <div className="container">
-          <h1>Article introuvable</h1>
-
-          <Link to="/blog" className="back-to-blog">
-            Retour au blog
-          </Link>
-        </div>
-      </div>
-    );
+    return <NotFound />;
   }
 
   const relatedArticles = articles
@@ -594,7 +598,7 @@ export default function BlogArticle() {
                 <div className="related-mini">
                   {relatedArticles.map((related) => (
                     <Link
-                      to={`/blog/${related.id}`}
+                      to={articlePath(related)}
                       key={related.id}
                       className="related-mini-item"
                     >
@@ -624,7 +628,7 @@ export default function BlogArticle() {
           <div className="nav-grid">
             {prevArticle ? (
               <Link
-                to={`/blog/${prevArticle.id}`}
+                to={articlePath(prevArticle)}
                 className="nav-item prev"
               >
                 <FiArrowLeft />
@@ -640,7 +644,7 @@ export default function BlogArticle() {
 
             {nextArticle && (
               <Link
-                to={`/blog/${nextArticle.id}`}
+                to={articlePath(nextArticle)}
                 className="nav-item next"
               >
                 <div>
@@ -663,7 +667,7 @@ export default function BlogArticle() {
             <div className="related-grid">
               {relatedArticles.map((related) => (
                 <Link
-                  to={`/blog/${related.id}`}
+                  to={articlePath(related)}
                   key={related.id}
                   className="related-card"
                 >

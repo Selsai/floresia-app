@@ -11,6 +11,7 @@ import iconeCiseau from '../../assets/shared/icone-ciseau.webp';
 import { ProductGridSkeleton } from '../../components/loading/LoadingSkeleton';
 import FloralSelect from '../../components/select/FloralSelect';
 import './Shop.css';
+import { productPath } from '../../utils/slug';
 
 const CATEGORY_LABELS = {
   MARIAGE: 'Mariage',
@@ -211,7 +212,7 @@ export default function Shop() {
                 const isFav = favoriteIds.has(product.id);
                 return (
                   <div key={product.id} className="product-card">
-                    <Link to={`/produit/${product.id}`} className="product-image-wrap">
+                    <Link to={productPath(product)} className="product-image-wrap">
                       <img src={product.imageUrl} alt={product.name} className="product-image" loading="lazy" onLoad={(event) => event.currentTarget.classList.add('is-loaded')} onError={(event) => event.currentTarget.classList.add('is-loaded')} />
                     </Link>
                     <button
@@ -223,13 +224,13 @@ export default function Shop() {
                     </button>
                     <div className="product-body">
                       <div className="product-occasions">{CATEGORY_LABELS[product.category]}</div>
-                      <Link to={`/produit/${product.id}`}>
+                      <Link to={productPath(product)}>
                         <h3 className="product-name">{product.name}</h3>
                       </Link>
                       <p className="product-description">{product.description}</p>
                       <div className="product-footer">
                         <span className="product-price">{formatPrice(product.price)}</span>
-                        <Link to={`/produit/${product.id}`} className="btn-add-cart">
+                        <Link to={productPath(product)} className="btn-add-cart">
                           Voir <ArrowUpRight size={16} />
                         </Link>
                       </div>

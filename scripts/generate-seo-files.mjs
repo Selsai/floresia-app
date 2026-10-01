@@ -2,6 +2,7 @@
 import { writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { loadEnv } from 'vite';
+import { toSlug } from '../src/utils/slug.js';
 
 const env = loadEnv('production', process.cwd(), 'VITE_');
 const site = env.VITE_SITE_URL?.replace(/\/+$/, '');
@@ -26,13 +27,13 @@ if (api) {
       const products = await productsResponse.json();
       routes.push(...products
         .filter(product => product?.id && product.id !== 'cmtxj1mhg000c99uhklj59h39')
-        .map(product => `/produit/${encodeURIComponent(product.id)}`));
+        .map(product => `/produit/${toSlug(product.name)}`));
     }
     if (articlesResponse.ok) {
       const articles = await articlesResponse.json();
       routes.push(...articles
         .filter(article => article?.id)
-        .map(article => `/blog/${encodeURIComponent(article.id)}`));
+        .map(article => `/blog/${toSlug(article.title)}`));
     }
   } catch (error) {
     console.warn(`SEO: dynamic catalogue routes unavailable (${error.message}); fixed routes were still generated.`);

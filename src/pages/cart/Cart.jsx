@@ -13,6 +13,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import './Cart.css';
+import { productPath } from '../../utils/slug';
 
 // Icône personnalisée en forme de fleur, aux couleurs Florésia
 // Icône personnalisée : pin vert avec une fleur rose dessinée en SVG
@@ -223,7 +224,7 @@ const storesLoading = deliveryMethod === 'PICKUP' && Boolean(selectedAddress?.la
                   {item.category === 'Personnalisé' ? (
                     <div className="item-image"><img src={item.image} alt={item.name} /></div>
                   ) : (
-                    <Link to={`/produit/${item.id}`} className="item-image">
+                    <Link to={productPath(item)} className="item-image">
                       <img src={item.imageUrl || item.image} alt={item.name} />
                     </Link>
                   )}
@@ -232,7 +233,7 @@ const storesLoading = deliveryMethod === 'PICKUP' && Boolean(selectedAddress?.la
                     {item.category === 'Personnalisé' ? (
                       <span className="item-name">{item.name}</span>
                     ) : (
-                      <Link to={`/produit/${item.id}`} className="item-name">{item.name}</Link>
+                      <Link to={productPath(item)} className="item-name">{item.name}</Link>
                     )}
 
                     <p className="item-category">{item.category}</p>
